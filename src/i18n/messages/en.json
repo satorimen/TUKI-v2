@@ -1,0 +1,53 @@
+{
+  "common": {
+    "appName": "TUKI",
+    "tagline": "Just say what you need — we'll find the right pro",
+    "language": "Language",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit"
+  },
+  "nav": {
+    "home": "Home",
+    "newTask": "New request",
+    "forMasters": "For pros",
+    "myTasks": "My requests"
+  },
+  "home": {
+    "heroTitle": "Need a repair? Just say it",
+    "heroSubtitle": "Describe the job in your own words — the AI assistant will understand, ask the right questions, and local pros will get back to you with quotes",
+    "ctaButton": "Describe the job",
+    "freeForever": "Free for customers. Forever.",
+    "howItWorksTitle": "How it works",
+    "step1Title": "1. Describe the job",
+    "step1Text": "By text or voice, in Hebrew, Russian or English — no forms, no jargon",
+    "step2Title": "2. Get quotes",
+    "step2Text": "Rated pros from your area see the request and reply with a price offer",
+    "step3Title": "3. Choose and chat",
+    "step3Text": "Pick a pro and continue right in WhatsApp. No commissions, no middlemen",
+    "forMastersTitle": "A pro? Join now",
+    "forMastersText": "During launch — free. Detailed requests with photos, straight to WhatsApp",
+    "forMastersCta": "Join as a pro"
+  },
+  "task": {
+    "chatPlaceholder": "Describe the job. E.g. need to paint a bedroom, 20 sqm",
+    "send": "Send",
+    "publish": "Publish request",
+    "taskCard": "Request card",
+    "typeOfWork": "Type of work",
+    "area": "Area",
+    "budget": "Budget",
+    "timeline": "Timeline",
+    "city": "City",
+    "photos": "Photos",
+    "details": "Details"
+  },
+  "city": {
+    "label": "City",
+    "placeholder": "Select a city"
+  }
+}
