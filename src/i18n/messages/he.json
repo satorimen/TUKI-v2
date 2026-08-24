@@ -46,6 +46,18 @@
     "photos": "תמונות",
     "details": "פרטים"
   },
+  "chat": {
+    "greeting": "שלום! אני העוזר של TUKI. תארו במילים שלכם מה צריך לעשות — ואני אבנה בקשה מסודרת לבעלי מקצוע.",
+    "thinking": "רגע, חושב...",
+    "publishSuccess": "הבקשה פורסמה! בעלי מקצוע מהאזור יראו אותה ויחזרו אליכם עם הצעות.",
+    "assistantName": "עוזר TUKI",
+    "you": "אתם",
+    "budgetUpTo": "עד {max} ₪",
+    "budgetRange": "{min}–{max} ₪",
+    "sqm": "{area} מ״ר",
+    "needCityBudget": "כדי לפרסם צריך לפחות עיר ותקציב",
+    "mockBadge": "מצב הדגמה (בלי AI חיצוני)"
+  },
   "city": {
     "label": "עיר",
     "placeholder": "בחרו עיר"

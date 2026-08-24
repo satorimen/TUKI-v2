@@ -46,6 +46,18 @@
     "photos": "Photos",
     "details": "Details"
   },
+  "chat": {
+    "greeting": "Hi! I'm the TUKI assistant. Describe in your own words what needs to be done — I'll build a structured request for pros.",
+    "thinking": "One sec, thinking...",
+    "publishSuccess": "Request published! Pros from your area will see it and reply with quotes.",
+    "assistantName": "TUKI assistant",
+    "you": "You",
+    "budgetUpTo": "up to {max} ₪",
+    "budgetRange": "{min}–{max} ₪",
+    "sqm": "{area} sqm",
+    "needCityBudget": "At least a city and a budget are needed to publish",
+    "mockBadge": "Demo mode (no external AI)"
+  },
   "city": {
     "label": "City",
     "placeholder": "Select a city"
