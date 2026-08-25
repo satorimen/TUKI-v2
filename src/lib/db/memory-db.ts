@@ -197,6 +197,13 @@ export class MemoryDb implements DbRepository {
     return task;
   }
 
+  async setTaskSelectedBid(taskId: string, bidId: string) {
+    const task = state().tasks.get(taskId);
+    if (!task) return null;
+    task.selectedBidId = bidId;
+    return task;
+  }
+
   // ── bids ─────────────────────────────────────────────────
   async createBid(input: any): Promise<Bid> {
     const existingBid = [...state().bids.values()].find(

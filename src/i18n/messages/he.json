@@ -90,6 +90,43 @@
     "save": "שמירה וסיום",
     "saved": "הפרופיל נשמר! 🎉",
     "validation": "מלאו לפחות תחום אחד ועיר אחת",
-    "loginFirst": "קודם כניסה — ואז הפרופיל"
+    "loginFirst": "קודם כניסה — ואז הפרופיל",
+    "feedTitle": "בקשות עבודה",
+    "feedEmpty": "אין בקשות חדשות בתחומים שלכם כרגע",
+    "respond": "להציע מחיר",
+    "yourPrice": "המחיר שלכם (₪)",
+    "yourTimeline": "לוח זמנים",
+    "yourMessage": "הודעה ללקוח",
+    "sendBid": "שליחת הצעה",
+    "bidSent": "ההצעה נשלחה!",
+    "alreadyBid": "כבר הגבתם לבקשה זו",
+    "myBids": "ההצעות שלי",
+    "fillProfile": "מלאו פרופיל כדי לראות בקשות"
+  },
+  "taskPage": {
+    "bidsTitle": "הצעות שהתקבלו",
+    "bestMatch": "התאמה מיטבית ⭐",
+    "select": "לבחור בעל מקצוע",
+    "selected": "נבחר!",
+    "rejected": "לא נבחר",
+    "noBids": "עדיין אין הצעות — בעלי מקצוע כבר רואים את הבקשה",
+    "assignedTitle": "בעל המקצוע נבחר! 🎉",
+    "assignedText": "המשיכו ישר בוואטסאפ:",
+    "openWhatsapp": "פתיחה בוואטסאפ",
+    "status": "סטטוס",
+    "status_published": "מפורסמת",
+    "status_assigned": "בוצעה בחירה",
+    "status_completed": "הושלמה",
+    "status_cancelled": "בוטלה",
+    "status_expired": "פג תוקף",
+    "myTasksTitle": "הבקשות שלי",
+    "myTasksEmpty": "אין בקשות — צרו אחת חדשה!",
+    "newTask": "בקשה חדשה",
+    "bidCount": "{count} הצעות"
+  },
+  "notify": {
+    "title": "התראות",
+    "empty": "אין התראות",
+    "markRead": "סימון הכל כנקרא"
   }
 }

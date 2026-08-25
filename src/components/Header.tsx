@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -21,11 +22,17 @@ export default function Header() {
           <Link href="/new-task" className="text-neutral-600 hover:text-tuki-600 dark:text-neutral-300">
             {t('newTask')}
           </Link>
-          <Link href="/master" className="text-neutral-600 hover:text-tuki-600 dark:text-neutral-300">
+          <Link href="/my-tasks" className="text-neutral-600 hover:text-tuki-600 dark:text-neutral-300">
+            {t('myTasks')}
+          </Link>
+          <Link href="/master/feed" className="text-neutral-600 hover:text-tuki-600 dark:text-neutral-300">
             {t('forMasters')}
           </Link>
         </nav>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );

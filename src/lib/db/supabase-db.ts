@@ -331,6 +331,17 @@ export class SupabaseDb implements DbRepository {
     return data ? mapTask(data) : null;
   }
 
+  async setTaskSelectedBid(taskId: string, bidId: string) {
+    const { data, error } = await this.db
+      .from('tasks')
+      .update({ selected_bid_id: bidId })
+      .eq('id', taskId)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return data ? mapTask(data) : null;
+  }
+
   // ── bids ─────────────────────────────────────────────────
   async createBid(input: any): Promise<Bid> {
     const { data, error } = await this.db

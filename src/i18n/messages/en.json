@@ -90,6 +90,43 @@
     "save": "Save and finish",
     "saved": "Profile saved! 🎉",
     "validation": "Pick at least one specialization and one city",
-    "loginFirst": "Sign in first — then the profile"
+    "loginFirst": "Sign in first — then the profile",
+    "feedTitle": "Job requests",
+    "feedEmpty": "No new requests in your specializations yet",
+    "respond": "Send a quote",
+    "yourPrice": "Your price (₪)",
+    "yourTimeline": "Timeline",
+    "yourMessage": "Message to the customer",
+    "sendBid": "Send offer",
+    "bidSent": "Offer sent!",
+    "alreadyBid": "You already responded to this request",
+    "myBids": "My offers",
+    "fillProfile": "Fill your profile to see requests"
+  },
+  "taskPage": {
+    "bidsTitle": "Received offers",
+    "bestMatch": "Best match ⭐",
+    "select": "Select pro",
+    "selected": "Selected!",
+    "rejected": "Not selected",
+    "noBids": "No offers yet — pros already see this request",
+    "assignedTitle": "Pro selected! 🎉",
+    "assignedText": "Continue right in WhatsApp:",
+    "openWhatsapp": "Open WhatsApp",
+    "status": "Status",
+    "status_published": "Published",
+    "status_assigned": "Pro selected",
+    "status_completed": "Completed",
+    "status_cancelled": "Cancelled",
+    "status_expired": "Expired",
+    "myTasksTitle": "My requests",
+    "myTasksEmpty": "No requests yet — create one!",
+    "newTask": "New request",
+    "bidCount": "{count} offers"
+  },
+  "notify": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "markRead": "Mark all as read"
   }
 }

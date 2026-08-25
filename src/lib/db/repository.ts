@@ -57,6 +57,7 @@ export interface DbRepository {
   listTasksByClient(clientId: string): Promise<Task[]>;
   listPublishedTasks(filter?: { cityIds?: string[]; categories?: string[] }): Promise<Task[]>;
   updateTaskStatus(id: string, status: TaskStatus): Promise<Task | null>;
+  setTaskSelectedBid(taskId: string, bidId: string): Promise<Task | null>;
 
   // ── bids ─────────────────────────────────────────────────
   createBid(input: Omit<Bid, 'id' | 'createdAt' | 'status'>): Promise<Bid>;
