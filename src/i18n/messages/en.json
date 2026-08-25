@@ -122,7 +122,31 @@
     "myTasksTitle": "My requests",
     "myTasksEmpty": "No requests yet — create one!",
     "newTask": "New request",
-    "bidCount": "{count} offers"
+    "bidCount": "{count} offers",
+    "markDone": "Work is done ✅",
+    "reviewTitle": "How did it go? Rate the pro",
+    "quality": "Work quality",
+    "budgetScore": "Budget adherence",
+    "punctuality": "Punctuality",
+    "cleanliness": "Cleanliness",
+    "communication": "Communication",
+    "reviewText": "Free text (optional)",
+    "submitReview": "Submit review",
+    "reviewThanks": "Thanks for the review! 🙏"
+  },
+  "admin": {
+    "title": "Dashboard",
+    "funnel": "Funnel",
+    "published": "Published",
+    "assigned": "Assigned",
+    "completed": "Completed",
+    "users": "Users",
+    "masters": "Pros",
+    "bids": "Bids",
+    "reviews": "Reviews",
+    "fillRate": "Fill rate",
+    "topMasters": "Top pros",
+    "loginAsAdmin": "Sign in with an admin email"
   },
   "notify": {
     "title": "Notifications",

@@ -68,4 +68,16 @@ export interface DbRepository {
   // ── reviews ──────────────────────────────────────────────
   createReview(input: Omit<Review, 'id' | 'createdAt' | 'masterResponse'>): Promise<Review>;
   listReviewsByMaster(masterId: string): Promise<Review[]>;
+
+  // ── admin stats ──────────────────────────────────────────
+  getStats(): Promise<AdminStats>;
+}
+
+export interface AdminStats {
+  users: number;
+  masters: number;
+  tasksByStatus: Record<string, number>;
+  bids: number;
+  reviews: number;
+  topMasters: { id: string; name: string; rating: number; reviewsCount: number; completedTasks: number }[];
 }

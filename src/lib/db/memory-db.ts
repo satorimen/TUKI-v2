@@ -276,4 +276,34 @@ export class MemoryDb implements DbRepository {
       .filter((r) => r.masterId === masterId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
+
+  // ── admin stats ──────────────────────────────────────────
+  async getStats() {
+    const s = state();
+    const tasksByStatus: Record<string, number> = {};
+    for (const t of s.tasks.values()) {
+      tasksByStatus[t.status] = (tasksByStatus[t.status] ?? 0) + 1;
+    }
+    const topMasters = [...s.masters.values()]
+      .sort((a, b) => b.rating - a.rating || b.completedTasks - a.completedTasks)
+      .slice(0, 10)
+      .map((m) => {
+        const profile = s.profiles.get(m.userId);
+        return {
+          id: m.id,
+          name: profile?.fullName ?? '—',
+          rating: m.rating,
+          reviewsCount: m.reviewsCount,
+          completedTasks: m.completedTasks,
+        };
+      });
+    return {
+      users: s.profiles.size,
+      masters: s.masters.size,
+      tasksByStatus,
+      bids: s.bids.size,
+      reviews: s.reviews.size,
+      topMasters,
+    };
+  }
 }

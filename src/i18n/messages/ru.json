@@ -122,7 +122,31 @@
     "myTasksTitle": "Мои заявки",
     "myTasksEmpty": "Заявок нет — создайте первую!",
     "newTask": "Новая заявка",
-    "bidCount": "{count} предложений"
+    "bidCount": "{count} предложений",
+    "markDone": "Работа выполнена ✅",
+    "reviewTitle": "Как всё прошло? Оцените мастера",
+    "quality": "Качество работ",
+    "budgetScore": "Соблюдение сметы",
+    "punctuality": "Пунктуальность",
+    "cleanliness": "Чистота",
+    "communication": "Коммуникация",
+    "reviewText": "Текст отзыва (необязательно)",
+    "submitReview": "Отправить отзыв",
+    "reviewThanks": "Спасибо за отзыв! 🙏"
+  },
+  "admin": {
+    "title": "Панель управления",
+    "funnel": "Воронка",
+    "published": "Опубликованы",
+    "assigned": "Выбран исполнитель",
+    "completed": "Завершены",
+    "users": "Пользователи",
+    "masters": "Мастера",
+    "bids": "Отклики",
+    "reviews": "Отзывы",
+    "fillRate": "Доля заявок с откликами",
+    "topMasters": "Топ мастеров",
+    "loginAsAdmin": "Войдите с admin-email"
   },
   "notify": {
     "title": "Уведомления",

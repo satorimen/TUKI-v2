@@ -88,7 +88,11 @@ export async function GET(
         }
       }
 
-      return NextResponse.json({ task, bids: ranked, bestMatchId, selected });
+      // the client's review of this task (submitted after completion)
+      const reviews = await db.listReviewsByMaster(selected?.master?.masterId ?? '');
+      const myReview = reviews.find((r) => r.taskId === task.id) ?? null;
+
+      return NextResponse.json({ task, bids: ranked, bestMatchId, selected, myReview });
     }
 
     // master (bid author): task + own bid only, competitors hidden (anti-dumping)
@@ -183,4 +187,34 @@ function whatsappLink(number: string, task: any): string {
         ? `Здравствуйте! Я клиент с TUKI по поводу «${work}» (${city}) 🙌`
         : `Hi! I'm the client from TUKI regarding ${work} in ${city} 🙌`;
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+}
+
+/**
+ * PUT /api/tasks/[id] — the client marks the assigned task as completed.
+ * Body: { action: 'complete' }
+ */
+export async function PUT(
+  _request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const profileId = await getSessionProfileId();
+    if (!profileId) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+
+    const { db } = getDb();
+    const task = await db.getTask(params.id);
+    if (!task) return NextResponse.json({ error: 'task_not_found' }, { status: 404 });
+    if (task.clientId !== profileId) {
+      return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+    }
+    if (task.status !== 'assigned') {
+      return NextResponse.json({ error: 'task_not_assigned' }, { status: 409 });
+    }
+
+    const updated = await db.updateTaskStatus(task.id, 'completed');
+    return NextResponse.json({ task: updated });
+  } catch (error) {
+    console.error('[PUT /api/tasks/:id]', error);
+    return NextResponse.json({ error: 'internal_error' }, { status: 500 });
+  }
 }

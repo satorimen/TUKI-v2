@@ -29,6 +29,14 @@ interface TaskView {
   bids: BidWithMaster[];
   bestMatchId: string | null;
   selected: { whatsappUrl: string; master: BidWithMaster['master'] } | null;
+  myReview: {
+    scoreQuality: number;
+    scoreBudget: number;
+    scorePunctuality: number;
+    scoreCleanliness: number;
+    scoreCommunication: number;
+    text: string | null;
+  } | null;
 }
 
 /** /task/[id] — client's task: bids, best match, select → WhatsApp handoff */
@@ -44,6 +52,44 @@ export default function TaskPage() {
     | { status: 'ok'; view: TaskView }
   >({ status: 'loading' });
   const [selecting, setSelecting] = useState<string | null>(null);
+  const [scores, setScores] = useState<Record<string, number>>({});
+  const [reviewText, setReviewText] = useState('');
+  const [sendingReview, setSendingReview] = useState(false);
+  const [reviewSent, setReviewSent] = useState(false);
+
+  async function markDone() {
+    await fetch(`/api/tasks/${params.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'complete' }),
+    });
+    await load();
+  }
+
+  async function submitReview() {
+    const keys = [
+      'scoreQuality',
+      'scoreBudget',
+      'scorePunctuality',
+      'scoreCleanliness',
+      'scoreCommunication',
+    ];
+    if (keys.some((k) => !scores[k]) || sendingReview) return;
+    setSendingReview(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId: params.id, ...scores, text: reviewText || undefined }),
+      });
+      if (res.ok) {
+        setReviewSent(true);
+        await load();
+      }
+    } finally {
+      setSendingReview(false);
+    }
+  }
 
   async function load() {
     const res = await fetch(`/api/tasks/${params.id}`);
@@ -118,7 +164,7 @@ export default function TaskPage() {
         <TaskCard draft={draftForCard as any} />
 
         {/* Selected handoff */}
-        {selected && task.status === 'assigned' && (
+        {selected && (task.status === 'assigned' || task.status === 'completed') && (
           <div className="rounded-2xl border-2 border-green-500 bg-green-50 p-6 text-center dark:bg-green-900/20">
             <h2 className="text-lg font-bold">{t('assignedTitle')}</h2>
             {selected.whatsappUrl && (
@@ -130,6 +176,78 @@ export default function TaskPage() {
               >
                 💬 {t('openWhatsapp')}
               </a>
+            )}
+            {task.status === 'assigned' && (
+              <button
+                onClick={markDone}
+                className="mt-3 block w-full rounded-xl border-2 border-green-600 py-2.5 font-medium text-green-700 transition hover:bg-green-100 dark:text-green-400"
+              >
+                {t('markDone')}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Review form (assigned/completed, not yet reviewed) */}
+        {(task.status === 'assigned' || task.status === 'completed') &&
+          !state.view.myReview &&
+          !reviewSent && (
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+              <h2 className="mb-4 font-bold">{t('reviewTitle')}</h2>
+              <div className="space-y-3">
+                {(
+                  [
+                    ['scoreQuality', 'quality'],
+                    ['scoreBudget', 'budgetScore'],
+                    ['scorePunctuality', 'punctuality'],
+                    ['scoreCleanliness', 'cleanliness'],
+                    ['scoreCommunication', 'communication'],
+                  ] as const
+                ).map(([key, label]) => (
+                  <div key={key} className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium">{t(label)}</span>
+                    <div className="flex gap-1" dir="ltr">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => setScores((s) => ({ ...s, [key]: star }))}
+                          className={`text-2xl transition ${
+                            (scores[key] ?? 0) >= star ? 'opacity-100' : 'opacity-25 hover:opacity-60'
+                          }`}
+                          aria-label={`${label} ${star}`}
+                        >
+                          ⭐
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  placeholder={t('reviewText')}
+                  rows={3}
+                  className="w-full resize-none rounded-xl border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-600"
+                />
+                <button
+                  onClick={submitReview}
+                  disabled={sendingReview || Object.keys(scores).length < 5}
+                  className="w-full rounded-xl bg-tuki-500 py-3 font-semibold text-white transition hover:bg-tuki-600 disabled:opacity-40"
+                >
+                  {t('submitReview')}
+                </button>
+              </div>
+            </div>
+          )}
+
+        {/* Review submitted */}
+        {(state.view.myReview || reviewSent) && (
+          <div className="rounded-2xl border border-green-300 bg-green-50 p-5 text-center font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
+            {t('reviewThanks')}
+            {state.view.myReview?.text && (
+              <p className="mt-2 text-sm font-normal text-neutral-600 dark:text-neutral-400">
+                «{state.view.myReview.text}»
+              </p>
             )}
           </div>
         )}

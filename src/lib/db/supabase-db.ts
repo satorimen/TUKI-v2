@@ -417,4 +417,40 @@ export class SupabaseDb implements DbRepository {
       .order('created_at', { ascending: false });
     return (data ?? []).map(mapReview);
   }
+
+  // ── admin stats ──────────────────────────────────────────
+  async getStats() {
+    const count = async (table: string, filter?: string, value?: string) => {
+      let q = this.db.from(table).select('*', { count: 'exact', head: true });
+      if (filter && value) q = q.eq(filter, value);
+      const { count: n } = await q;
+      return n ?? 0;
+    };
+
+    const statuses = ['draft', 'published', 'assigned', 'completed', 'cancelled', 'expired'];
+    const entries = await Promise.all(
+      statuses.map(async (st) => [st, await count('tasks', 'status', st)] as const)
+    );
+
+    const { data: topRows } = await this.db
+      .from('masters')
+      .select('id, rating, reviews_count, completed_tasks, profiles!inner(full_name)')
+      .order('rating', { ascending: false })
+      .limit(10);
+
+    return {
+      users: await count('profiles'),
+      masters: await count('masters'),
+      tasksByStatus: Object.fromEntries(entries) as Record<string, number>,
+      bids: await count('bids'),
+      reviews: await count('reviews'),
+      topMasters: (topRows ?? []).map((r: any) => ({
+        id: r.id,
+        name: r.profiles?.full_name ?? '—',
+        rating: Number(r.rating ?? 0),
+        reviewsCount: r.reviews_count ?? 0,
+        completedTasks: r.completed_tasks ?? 0,
+      })),
+    };
+  }
 }

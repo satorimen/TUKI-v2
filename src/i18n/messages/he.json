@@ -122,7 +122,31 @@
     "myTasksTitle": "הבקשות שלי",
     "myTasksEmpty": "אין בקשות — צרו אחת חדשה!",
     "newTask": "בקשה חדשה",
-    "bidCount": "{count} הצעות"
+    "bidCount": "{count} הצעות",
+    "markDone": "העבודה הסתיימה ✅",
+    "reviewTitle": "איך היה? דרגו את בעל המקצוע",
+    "quality": "איכות העבודה",
+    "budgetScore": "עמידה בתקציב",
+    "punctuality": "דייקנות",
+    "cleanliness": "ניקיון",
+    "communication": "תקשורת",
+    "reviewText": "טקסט חופשי (אופציונלי)",
+    "submitReview": "שליחת ביקורת",
+    "reviewThanks": "תודה על הביקורת! 🙏"
+  },
+  "admin": {
+    "title": "לוח בקרה",
+    "funnel": "משפך",
+    "published": "מפורסמות",
+    "assigned": "נבחרו",
+    "completed": "הושלמו",
+    "users": "משתמשים",
+    "masters": "בעלי מקצוע",
+    "bids": "הצעות",
+    "reviews": "ביקורות",
+    "fillRate": "אחוז קבלת הצעות",
+    "topMasters": "בעלי מקצוע מובילים",
+    "loginAsAdmin": "התחברו עם אימייל מנהל"
   },
   "notify": {
     "title": "התראות",
