@@ -4,9 +4,9 @@ import { useMemo, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import Header from '@/components/Header';
 import TaskCard from '@/components/task/TaskCard';
+import AuthForm from '@/components/auth/AuthForm';
 import { CITIES, cityName } from '@/lib/geo/cities';
 import { CLUSTERS } from '@/lib/geo/clusters';
-import { publishTask } from '@/lib/db/local-store';
 import type { ChatMessage, ParseResult, TaskDraft, Language } from '@/lib/ai/types';
 
 interface UiMessage extends ChatMessage {
@@ -30,6 +30,8 @@ export default function NewTaskPage() {
   const [draft, setDraft] = useState<TaskDraft | null>(null);
   const [published, setPublished] = useState<string | null>(null);
   const [provider, setProvider] = useState<'gemini' | 'mock' | null>(null);
+  const [needAuth, setNeedAuth] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const idRef = useRef(1);
 
   const canPublish = useMemo(
@@ -80,10 +82,39 @@ export default function NewTaskPage() {
     }
   }
 
-  function onPublish() {
-    if (!draft || !canPublish) return;
-    const id = publishTask(draft);
-    setPublished(id);
+  /** Publish: requires session — shows inline auth if missing */
+  async function onPublish() {
+    if (!draft || !canPublish || publishing) return;
+    setPublishing(true);
+    try {
+      const me = await fetch('/api/auth/me').then((r) => r.json());
+      if (!me.profile) {
+        setNeedAuth(true);
+        setPublishing(false);
+        return;
+      }
+      await publishNow();
+    } catch {
+      setPublishing(false);
+    }
+  }
+
+  async function publishNow() {
+    if (!draft) return;
+    setPublishing(true);
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ draft, cityId: draft.cityId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setPublished(data.task.id);
+      setNeedAuth(false);
+    } finally {
+      setPublishing(false);
+    }
   }
 
   const citiesByCluster = useMemo(() => {
@@ -190,14 +221,21 @@ export default function NewTaskPage() {
                 </div>
 
                 {/* Publish */}
-                <button
-                  onClick={onPublish}
-                  disabled={!canPublish}
-                  className="w-full rounded-xl bg-tuki-500 py-4 text-lg font-semibold text-white shadow-lg shadow-tuki-500/30 transition hover:bg-tuki-600 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {t('publish')}
-                </button>
-                {!canPublish && (
+                {needAuth ? (
+                  <div className="space-y-3">
+                    <p className="text-center text-sm text-neutral-500">{tc('loginToPublish')}</p>
+                    <AuthForm onAuthed={publishNow} />
+                  </div>
+                ) : (
+                  <button
+                    onClick={onPublish}
+                    disabled={!canPublish || publishing}
+                    className="w-full rounded-xl bg-tuki-500 py-4 text-lg font-semibold text-white shadow-lg shadow-tuki-500/30 transition hover:bg-tuki-600 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {t('publish')}
+                  </button>
+                )}
+                {!canPublish && !needAuth && (
                   <p className="text-center text-sm text-neutral-500">{tc('needCityBudget')}</p>
                 )}
               </div>

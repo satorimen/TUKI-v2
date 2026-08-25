@@ -40,13 +40,16 @@
 
 **Проверено:** категории/города (incl. склонения и ивритские префиксы)/бюджет (₪, שקל, «до N», диапазон)/площадь/сроки извлекаются; уточняющие вопросы ≤2; multi-turn сохраняет черновик.
 
-## M3: Данные и пользователи (2-3 сессии) — нужен Supabase-аккаунт
+## M3: Данные и пользователи ✅ (memory-режим; Supabase включается ключами)
 
-- [ ] SQL-миграции: `users, masters, tasks, bids, reviews` (+ статусы ТЗ)
-- [ ] RLS-политики, генерация TS-типов
-- [ ] Auth: телефон OTP (+972) / email magic link
-- [ ] Онбординг мастера: специализация, города работы, опыт, портфолио
-- [ ] Подключение реального Supabase (Repository-слой не меняется)
+- [x] SQL-миграция `supabase/migrations/001_initial_schema.sql`: profiles, masters, tasks, bids, reviews + RLS + индексы + триггер пересчёта рейтинга (веса из PRD §8.5)
+- [x] Repository-абстракция `src/lib/db/`: интерфейс + MemoryDb (globalThis singleton) + SupabaseDb (маппинг camelCase↔snake_case, GIN-overlaps запросы)
+- [x] Auth: cookie-сессии (HMAC httpOnly), email + 6-значный код (`/api/auth/*`), нормализация WhatsApp +972
+- [x] Онбординг мастера `/master`: специализации-чипы, города по кластерам, опыт, bio, WhatsApp
+- [x] Публикация заявок через `POST /api/tasks` (guard 401, инлайн-логин на /new-task)
+- [x] E2E-тесты: регистрация мастера, публикация задачи клиентом, листинг, auth-guard — все зелёные
+
+**Подключение Supabase (когда будут ключи):** выполнить миграцию в SQL Editor → добавить `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` в `.env.local` → Repository переключится автоматически.
 
 ## M4: Маркетплейс-ядро (3-4 сессии)
 

@@ -56,10 +56,40 @@
     "budgetRange": "{min}–{max} ₪",
     "sqm": "{area} sqm",
     "needCityBudget": "At least a city and a budget are needed to publish",
+    "loginToPublish": "To publish — a quick email sign-in:",
     "mockBadge": "Demo mode (no external AI)"
   },
   "city": {
     "label": "City",
     "placeholder": "Select a city"
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "Passwordless sign-in by email",
+    "emailLabel": "Email",
+    "requestCode": "Send me a code",
+    "codeLabel": "Verification code (6 digits)",
+    "verify": "Verify and sign in",
+    "invalidCode": "Wrong code, try again",
+    "devCodeHint": "Demo mode — code: {code}",
+    "logout": "Sign out"
+  },
+  "master": {
+    "onboardingTitle": "Join as a pro",
+    "onboardingSubtitle": "A couple of short steps — and you start getting relevant job requests",
+    "fullName": "Full name",
+    "whatsapp": "WhatsApp number",
+    "whatsappHint": "Customers will contact you via it",
+    "specializations": "Specializations",
+    "specializationsHint": "Pick one or more",
+    "workCities": "Work cities",
+    "workCitiesHint": "Where are you willing to work?",
+    "experience": "Years of experience",
+    "bio": "About you",
+    "bioPlaceholder": "Experience, specialty, languages...",
+    "save": "Save and finish",
+    "saved": "Profile saved! 🎉",
+    "validation": "Pick at least one specialization and one city",
+    "loginFirst": "Sign in first — then the profile"
   }
 }

@@ -1,25 +1,56 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getDb } from '@/lib/db';
+import { getSessionProfileId } from '@/lib/auth/session';
+import { setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import Header from '@/components/Header';
+import AuthForm from '@/components/auth/AuthForm';
+import MasterOnboarding from '@/components/master/MasterOnboarding';
 import type { Locale } from '@/i18n/routing';
 
+export const dynamic = 'force-dynamic';
+
+/**
+ * /master — server component:
+ * not signed in → auth form; signed in → onboarding/edit profile
+ */
 export default async function MasterPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   setRequestLocale(locale as Locale);
-  const t = await getTranslations('nav');
+
+  const profileId = await getSessionProfileId();
+  let content: React.ReactNode;
+
+  if (!profileId) {
+    content = (
+      <div className="py-16">
+        <AuthForm />
+      </div>
+    );
+  } else {
+    const { db } = getDb();
+    const [profile, master] = await Promise.all([
+      db.getProfile(profileId),
+      db.getMasterByUserId(profileId),
+    ]);
+    content =
+      profile ? (
+        <MasterOnboarding profile={profile} master={master} />
+      ) : (
+        <div className="py-16 text-center">
+          <p>
+            <Link href="/auth">auth</Link>
+          </p>
+        </div>
+      );
+  }
 
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <div className="rounded-2xl border border-dashed border-neutral-300 p-12 dark:border-neutral-700">
-          <p className="text-lg font-medium text-neutral-500">
-            🚧 {t('forMasters')} — M3
-          </p>
-        </div>
-      </main>
+      <main className="mx-auto max-w-3xl px-4">{content}</main>
     </>
   );
 }

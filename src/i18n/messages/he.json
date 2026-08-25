@@ -56,10 +56,40 @@
     "budgetRange": "{min}–{max} ₪",
     "sqm": "{area} מ״ר",
     "needCityBudget": "כדי לפרסם צריך לפחות עיר ותקציב",
+    "loginToPublish": "כדי לפרסם — התחברות קצרה לפי אימייל:",
     "mockBadge": "מצב הדגמה (בלי AI חיצוני)"
   },
   "city": {
     "label": "עיר",
     "placeholder": "בחרו עיר"
+  },
+  "auth": {
+    "title": "כניסה",
+    "subtitle": "נכניס אתכם לפי אימייל — בלי סיסמאות",
+    "emailLabel": "אימייל",
+    "requestCode": "שלחו לי קוד",
+    "codeLabel": "קוד אישור (6 ספרות)",
+    "verify": "אישור וכניסה",
+    "invalidCode": "קוד שגוי, נסו שוב",
+    "devCodeHint": "מצב הדגמה — הקוד: {code}",
+    "logout": "יציאה"
+  },
+  "master": {
+    "onboardingTitle": "הרשמת בעל מקצוע",
+    "onboardingSubtitle": "כמה פרטים קצרים — ותתחילו לקבל בקשות עבודה רלוונטיות",
+    "fullName": "שם מלא",
+    "whatsapp": "מספר וואטסאפ",
+    "whatsappHint": "דרכו לקוחות ייצרו איתכם קשר",
+    "specializations": "תחומי עבודה",
+    "specializationsHint": "בחרו אחד או יותר",
+    "workCities": "ערי עבודה",
+    "workCitiesHint": "איפה אתם מוכנים לעבוד?",
+    "experience": "שנות ניסיון",
+    "bio": "על עצמכם",
+    "bioPlaceholder": "נסיון, התמחות, שפות...",
+    "save": "שמירה וסיום",
+    "saved": "הפרופיל נשמר! 🎉",
+    "validation": "מלאו לפחות תחום אחד ועיר אחת",
+    "loginFirst": "קודם כניסה — ואז הפרופיל"
   }
 }
