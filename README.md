@@ -36,6 +36,33 @@ npm run dev                  # http://localhost:3000
 | `R2_*` | M4 (фото) | Cloudflare Dashboard |
 | `RESEND_API_KEY` | M5 (email) | [resend.com](https://resend.com) |
 
+## Деплой на Vercel (бесплатно)
+
+1. Залейте репозиторий на GitHub
+2. [vercel.com](https://vercel.com) → Add New Project → импортируйте репозиторий
+3. В **Environment Variables** добавьте (минимум для продакшена):
+   ```
+   GEMINI_API_KEY=...          # реальный ИИ (без него — rule-based мок)
+   AUTH_SECRET=<случайная строка>  # openssl rand -hex 32
+   ADMIN_EMAILS=you@mail.com   # доступ к /admin
+   NEXT_PUBLIC_SITE_URL=https://ваш-домен
+   ```
+4. Deploy → готово. Далее (по желанию): Supabase-ключи → данные в БД вместо memory
+
+**Важно для продакшена:** без Supabase данные живут в памяти сервера и пропадают при redeploy. Для реального запуска подключите Supabase (см. ниже).
+
+## Подключение Supabase (персистентность)
+
+1. [supabase.com](https://supabase.com) → New project
+2. SQL Editor → вставьте `supabase/migrations/001_initial_schema.sql` → Run
+3. Settings → API → скопируйте `Project URL` и `service_role` ключ
+4. Добавьте в `.env.local` (и в Vercel):
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=eyJ...
+   ```
+5. Перезапустите — Repository сам переключится с memory на Supabase
+
 ## Скрипты
 
 ```bash
