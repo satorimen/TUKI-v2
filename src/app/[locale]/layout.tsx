@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
+import BottomNav from '@/components/BottomNav';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -49,9 +50,10 @@ export async function generateMetadata({
 }
 
 export const viewport = {
-  themeColor: '#f97316',
+  themeColor: '#0d0d0d',
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export function generateStaticParams() {
@@ -74,8 +76,14 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={getDirection(locale)} className={`${rubik.variable} dark`}>
-      <body className="min-h-screen antialiased">
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+      <body className="min-h-dvh antialiased">
+        <NextIntlClientProvider messages={messages}>
+          {/* mobile app shell: phone column on any screen */}
+          <div className="mx-auto flex min-h-dvh max-w-md flex-col border-neutral-800/60 sm:border-x">
+            <div className="flex-1 pb-24">{children}</div>
+          </div>
+          <BottomNav />
+        </NextIntlClientProvider>
         <Analytics />
       </body>
     </html>

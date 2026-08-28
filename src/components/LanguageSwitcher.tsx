@@ -4,33 +4,27 @@ import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { locales, type Locale } from '@/i18n/routing';
 
-const LOCALE_LABELS: Record<Locale, string> = {
-  he: 'עברית',
-  ru: 'Русский',
-  en: 'English',
-};
-
+/** Minimal pill switcher: עב / Рус / En */
 export default function LanguageSwitcher() {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
 
+  const SHORT: Record<Locale, string> = { he: 'עב', ru: 'Рус', en: 'En' };
+
   return (
-    <select
-      aria-label="Language"
-      value={locale}
-      onChange={(e) => {
-        const next = e.target.value as Locale;
-        // Keep the current path, switch only the locale
-        router.replace(pathname, { locale: next });
-      }}
-      className="rounded-md border border-neutral-300 bg-transparent px-2 py-1 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-tuki-500 dark:border-neutral-700 dark:text-neutral-300"
-    >
+    <div className="flex items-center gap-0.5 rounded-full bg-neutral-800/80 p-0.5 text-xs font-medium">
       {locales.map((l) => (
-        <option key={l} value={l}>
-          {LOCALE_LABELS[l]}
-        </option>
+        <button
+          key={l}
+          onClick={() => router.replace(pathname, { locale: l })}
+          className={`rounded-full px-2.5 py-1 transition ${
+            l === locale ? 'bg-tuki-500 text-white' : 'text-neutral-400'
+          }`}
+        >
+          {SHORT[l]}
+        </button>
       ))}
-    </select>
+    </div>
   );
 }
