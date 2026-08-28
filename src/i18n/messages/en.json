@@ -152,5 +152,17 @@
     "title": "Notifications",
     "empty": "No notifications",
     "markRead": "Mark all as read"
+  },
+  "form": {
+    "step1": "What needs to be done?",
+    "step1Hint": "Describe it in a few words — the rest fills in automatically",
+    "next": "Next",
+    "step2": "Check the details",
+    "backToEdit": "Edit description",
+    "workTypes": "Work types",
+    "budgetTo": "Budget up to (₪)",
+    "when": "When to start",
+    "sending": "One sec…",
+    "example": "E.g. paint a bedroom 20 sqm, paint included"
   }
 }

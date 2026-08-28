@@ -15,64 +15,36 @@ export default async function HomePage({
   return (
     <>
       <Header />
-      <main className="px-5 pb-6">
-        {/* Hero */}
-        <section className="pt-8">
-          <p className="mb-2 text-sm font-medium text-tuki-500">{t('freeForever')}</p>
-          <h1 className="text-[2rem] font-bold leading-tight">{t('heroTitle')}</h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-neutral-400">
-            {t('heroSubtitle')}
-          </p>
-        </section>
+      <main className="flex min-h-[80dvh] flex-col px-6 pt-14">
+        <h1 className="text-[1.75rem] font-bold leading-snug">{t('heroTitle')}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-neutral-500">{t('heroSubtitle')}</p>
 
-        {/* CTA card */}
-        <Link
-          href="/new-task"
-          className="mt-8 block rounded-3xl bg-gradient-to-br from-tuki-500 to-tuki-600 p-6 shadow-xl shadow-tuki-500/20 transition active:scale-[0.98]"
-        >
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-3xl">
-            🗣
-          </div>
-          <p className="text-lg font-bold text-white">{t('ctaButton')}</p>
-          <p className="mt-1 text-sm text-white/70">עברית · Русский · English</p>
-        </Link>
+        {/* Primary action */}
+        <div className="mt-auto pb-6 pt-10">
+          <Link
+            href="/new-task"
+            className="block w-full rounded-2xl bg-tuki-500 py-4 text-center font-semibold text-white transition active:scale-[0.98]"
+          >
+            {t('ctaButton')}
+          </Link>
+          <p className="mt-3 text-center text-xs text-neutral-600">{t('freeForever')}</p>
+        </div>
 
-        {/* How it works — compact rows */}
-        <section className="mt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-            {t('howItWorksTitle')}
-          </h2>
-          <div className="space-y-2.5">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className="flex items-center gap-4 rounded-2xl bg-[#1c1c1c] p-4"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tuki-500/15 text-sm font-bold text-tuki-500">
-                  {step}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold">
-                    {t(`step${step}Title` as any)}
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">
-                    {t(`step${step}Text` as any)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* How it works — three short muted lines */}
+        <div className="space-y-3 border-t border-neutral-800/70 pb-6 pt-5">
+          {[1, 2, 3].map((step) => (
+            <p key={step} className="flex items-baseline gap-3 text-sm text-neutral-400">
+              <span className="font-mono text-xs text-neutral-600">0{step}</span>
+              {t(`step${step}Title` as any).replace(/^\d+\.\s*/, '')}
+            </p>
+          ))}
+        </div>
 
-        {/* For masters */}
         <Link
           href="/master"
-          className="mt-6 block rounded-2xl border border-neutral-800 p-4 transition active:scale-[0.98]"
+          className="pb-8 text-center text-xs text-neutral-600 underline underline-offset-4"
         >
-          <p className="font-semibold">
-            👷 {t('forMastersTitle')}
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-neutral-500">{t('forMastersText')}</p>
+          {t('forMastersTitle')} →
         </Link>
       </main>
     </>

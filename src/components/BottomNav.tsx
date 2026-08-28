@@ -26,10 +26,10 @@ export default function BottomNav() {
         <Link
           href="/new-task"
           aria-label={t('newTask')}
-          className={`-mt-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-2xl font-light shadow-lg transition ${
+          className={`-mt-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-2xl font-light transition active:scale-90 ${
             pathname.startsWith('/new-task')
               ? 'bg-neutral-200 text-neutral-900'
-              : 'bg-tuki-500 text-white shadow-tuki-500/40'
+              : 'bg-tuki-500 text-white'
           }`}
         >
           +
