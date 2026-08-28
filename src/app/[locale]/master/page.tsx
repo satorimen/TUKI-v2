@@ -14,10 +14,11 @@ export const dynamic = 'force-dynamic';
  * not signed in → auth form; signed in → onboarding/edit profile
  */
 export default async function MasterPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale as Locale);
 
   const profileId = await getSessionProfileId();

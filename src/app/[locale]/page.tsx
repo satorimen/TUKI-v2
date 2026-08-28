@@ -4,10 +4,11 @@ import Header from '@/components/Header';
 import type { Locale } from '@/i18n/routing';
 
 export default async function HomePage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale as Locale);
   const t = await getTranslations('home');
 

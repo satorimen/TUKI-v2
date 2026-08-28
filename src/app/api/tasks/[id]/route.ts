@@ -30,14 +30,15 @@ function publicMaster(master: any, profile: any) {
  */
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const profileId = await getSessionProfileId();
     if (!profileId) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
+    const { id } = await params;
     const { db } = getDb();
-    const task = await db.getTask(params.id);
+    const task = await db.getTask(id);
     if (!task) return NextResponse.json({ error: 'task_not_found' }, { status: 404 });
 
     const isClient = task.clientId === profileId;
@@ -107,7 +108,7 @@ export async function GET(
 /** POST /api/tasks/[id] — client selects a bid → contacts handoff (matchmaker model) */
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const profileId = await getSessionProfileId();
@@ -117,7 +118,8 @@ export async function POST(
     if (!bidId) return NextResponse.json({ error: 'bid_id_required' }, { status: 400 });
 
     const { db } = getDb();
-    const task = await db.getTask(params.id);
+    const { id } = await params;
+    const task = await db.getTask(id);
     if (!task) return NextResponse.json({ error: 'task_not_found' }, { status: 404 });
     if (task.clientId !== profileId) {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 });
@@ -195,14 +197,15 @@ function whatsappLink(number: string, task: any): string {
  */
 export async function PUT(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const profileId = await getSessionProfileId();
     if (!profileId) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
+    const { id } = await params;
     const { db } = getDb();
-    const task = await db.getTask(params.id);
+    const task = await db.getTask(id);
     if (!task) return NextResponse.json({ error: 'task_not_found' }, { status: 404 });
     if (task.clientId !== profileId) {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 });

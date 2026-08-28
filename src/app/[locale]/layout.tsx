@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing, getDirection, type Locale } from '@/i18n/routing';
+import '@astryxdesign/core/reset.css';
+import '@astryxdesign/core/astryx.css';
+import '@astryxdesign/theme-neutral';
 import '../globals.css';
 
 // Rubik covers all three locales: Hebrew, Cyrillic (Russian) and Latin
@@ -32,10 +35,11 @@ const META: Record<string, { title: string; description: string }> = {
 };
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const meta = META[locale] ?? META.he;
   return {
     ...meta,
@@ -56,11 +60,12 @@ export function generateStaticParams() {
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   if (!routing.locales.includes(locale as Locale)) {
     notFound();
   }
@@ -68,7 +73,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={getDirection(locale)} className={rubik.variable}>
+    <html lang={locale} dir={getDirection(locale)} className={`${rubik.variable} dark`}>
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
         <Analytics />
