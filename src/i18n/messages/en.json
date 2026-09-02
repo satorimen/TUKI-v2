@@ -164,5 +164,42 @@
     "when": "When to start",
     "sending": "One sec…",
     "example": "E.g. paint a bedroom 20 sqm, paint included"
+  },
+  "account": {
+    "title": "Account",
+    "notLoggedIn": "Not signed in",
+    "loginSubtitle": "Sign in or register by email",
+    "name": "Name",
+    "whatsapp": "WhatsApp for contact",
+    "save": "Save",
+    "saved": "Saved",
+    "logout": "Sign out",
+    "masterCabinet": "Pro dashboard"
+  },
+  "cabinet": {
+    "title": "Pro dashboard",
+    "statusActive": "Accepting requests",
+    "statusInactive": "Paused",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "completed": "Completed",
+    "activeBids": "My bids",
+    "noBids": "No bids yet — check the feed",
+    "edit": "Edit profile",
+    "feed": "Requests feed",
+    "bid_pending": "Pending",
+    "bid_selected": "Selected ✔",
+    "bid_rejected": "Not selected"
+  },
+  "myTasksFilters": {
+    "all": "All",
+    "published": "Active",
+    "assigned": "In progress",
+    "completed": "Done"
+  },
+  "taskActions": {
+    "cancel": "Cancel request",
+    "cancelled": "Request cancelled",
+    "bids": "bids"
   }
 }

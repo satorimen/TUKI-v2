@@ -1,17 +1,17 @@
 import { getDb } from '@/lib/db';
 import { getSessionProfileId } from '@/lib/auth/session';
 import { setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import Header from '@/components/Header';
 import AuthForm from '@/components/auth/AuthForm';
 import MasterOnboarding from '@/components/master/MasterOnboarding';
+import MasterCabinet from '@/components/master/MasterCabinet';
 import type { Locale } from '@/i18n/routing';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * /master — server component:
- * not signed in → auth form; signed in → onboarding/edit profile
+ * /master — master home:
+ * not signed in → auth · no master profile → onboarding · profile → cabinet
  */
 export default async function MasterPage({
   params,
@@ -22,36 +22,43 @@ export default async function MasterPage({
   setRequestLocale(locale as Locale);
 
   const profileId = await getSessionProfileId();
-  let content: React.ReactNode;
 
   if (!profileId) {
-    content = (
-      <div className="py-16">
-        <AuthForm />
-      </div>
+    return (
+      <>
+        <Header />
+        <main className="px-5 py-10">
+          <AuthForm />
+        </main>
+      </>
     );
-  } else {
-    const { db } = getDb();
-    const [profile, master] = await Promise.all([
-      db.getProfile(profileId),
-      db.getMasterByUserId(profileId),
-    ]);
-    content =
-      profile ? (
-        <MasterOnboarding profile={profile} master={master} />
-      ) : (
-        <div className="py-16 text-center">
-          <p>
-            <Link href="/auth">auth</Link>
-          </p>
-        </div>
-      );
   }
+
+  const { db } = getDb();
+  const profile = await db.getProfile(profileId);
+  if (!profile) {
+    return (
+      <>
+        <Header />
+        <main className="px-5 py-10">
+          <AuthForm />
+        </main>
+      </>
+    );
+  }
+
+  const master = await db.getMasterByUserId(profile.id);
 
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4">{content}</main>
+      {master ? (
+        <MasterCabinet />
+      ) : (
+        <main className="px-5">
+          <MasterOnboarding profile={profile} master={null} />
+        </main>
+      )}
     </>
   );
 }

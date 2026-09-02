@@ -44,6 +44,7 @@ export default function TaskPage() {
   const params = useParams<{ id: string }>();
   const locale = useLocale() as 'he' | 'ru' | 'en';
   const t = useTranslations('taskPage');
+  const ta = useTranslations('taskActions');
 
   const [state, setState] = useState<
     | { status: 'loading' }
@@ -56,6 +57,15 @@ export default function TaskPage() {
   const [reviewText, setReviewText] = useState('');
   const [sendingReview, setSendingReview] = useState(false);
   const [reviewSent, setReviewSent] = useState(false);
+
+  async function cancelTask() {
+    await fetch(`/api/tasks/${params.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'cancel' }),
+    });
+    await load();
+  }
 
   async function markDone() {
     await fetch(`/api/tasks/${params.id}`, {
@@ -326,6 +336,16 @@ export default function TaskPage() {
                 </div>
               ))}
             </div>
+
+            {/* Cancel task */}
+            <button
+              onClick={() => {
+                if (confirm(ta('cancelConfirm'))) cancelTask();
+              }}
+              className="mt-6 w-full rounded-xl border border-neutral-800 py-3 text-sm font-medium text-neutral-500 transition active:scale-[0.98]"
+            >
+              {ta('cancel')}
+            </button>
           </>
         )}
       </main>

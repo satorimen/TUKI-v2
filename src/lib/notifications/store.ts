@@ -6,7 +6,9 @@
 export type NotificationType =
   | 'new_bid' // → task client
   | 'bid_selected' // → master
-  | 'task_assigned'; // → task client (confirmation)
+  | 'task_assigned' // → task client (confirmation)
+  | 'new_task' // → matched masters
+  | 'task_cancelled'; // → bidding masters
 
 export interface AppNotification {
   id: string;

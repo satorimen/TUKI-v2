@@ -164,5 +164,42 @@
     "when": "מתי להתחיל",
     "sending": "רגע…",
     "example": "למשל: לצבוע חדר שינה 20 מ״ר, יש צבע"
+  },
+  "account": {
+    "title": "חשבון",
+    "notLoggedIn": "לא נכנסתם",
+    "loginSubtitle": "כניסה או הרשמה באימייל",
+    "name": "שם",
+    "whatsapp": "וואטסאפ ליצירת קשר",
+    "save": "שמירה",
+    "saved": "נשמר",
+    "logout": "יציאה",
+    "masterCabinet": "אזור בעל מקצוע"
+  },
+  "cabinet": {
+    "title": "אזור בעל מקצוע",
+    "statusActive": "מקבל/ת בקשות",
+    "statusInactive": "בהשהיה",
+    "rating": "דירוג",
+    "reviews": "ביקורות",
+    "completed": "הושלמו",
+    "activeBids": "ההצעות שלי",
+    "noBids": "אין הצעות — בדקו את לוח הבקשות",
+    "edit": "עריכת פרופיל",
+    "feed": "לוח הבקשות",
+    "bid_pending": "ממתין",
+    "bid_selected": "נבחר ✔",
+    "bid_rejected": "לא נבחר"
+  },
+  "myTasksFilters": {
+    "all": "הכול",
+    "published": "פעילות",
+    "assigned": "בטיפול",
+    "completed": "הושלמו"
+  },
+  "taskActions": {
+    "cancel": "ביטול הבקשה",
+    "cancelled": "הבקשה בוטלה",
+    "bids": "הצעות"
   }
 }

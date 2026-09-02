@@ -105,7 +105,7 @@ export async function GET(
   }
 }
 
-/** POST /api/tasks/[id] — client selects a bid → contacts handoff (matchmaker model) */
+/** POST /api/tasks/[id] — select a bid ({bidId}) or cancel the task ({action:'cancel'}) */
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -114,7 +114,48 @@ export async function POST(
     const profileId = await getSessionProfileId();
     if (!profileId) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
-    const { bidId } = (await request.json()) as { bidId?: string };
+    const body = (await request.json()) as { bidId?: string; action?: string };
+
+    // ── cancel action ──────────────────────────────────────
+    if (body.action === 'cancel') {
+      const { db } = getDb();
+      const { id } = await params;
+      const task = await db.getTask(id);
+      if (!task) return NextResponse.json({ error: 'task_not_found' }, { status: 404 });
+      if (task.clientId !== profileId) {
+        return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+      }
+      if (task.status !== 'published') {
+        return NextResponse.json({ error: 'task_not_published' }, { status: 409 });
+      }
+      await db.updateTaskStatus(task.id, 'cancelled');
+
+      // notify masters who already bid
+      const bids = await db.listBidsByTask(task.id);
+      const seen = new Set<string>();
+      for (const bid of bids) {
+        const master = await db.getMaster(bid.masterId);
+        if (master && !seen.has(master.userId)) {
+          seen.add(master.userId);
+          pushNotification({
+            userId: master.userId,
+            type: 'task_cancelled',
+            taskId: task.id,
+            text:
+              task.language === 'he'
+                ? '⚠️ הבקשה בוטלה על ידי הלקוח'
+                : task.language === 'ru'
+                  ? '⚠️ Заявка отменена клиентом'
+                  : '⚠️ The customer cancelled this request',
+            link: `/master/feed`,
+          });
+        }
+      }
+      return NextResponse.json({ ok: true });
+    }
+
+    // ── select bid ─────────────────────────────────────────
+    const bidId = body.bidId;
     if (!bidId) return NextResponse.json({ error: 'bid_id_required' }, { status: 400 });
 
     const { db } = getDb();

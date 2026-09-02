@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getDb, taskFromDraft } from '@/lib/db';
 import { getSessionProfileId } from '@/lib/auth/session';
-import { getCity } from '@/lib/geo/cities';
+import { getCity, cityName } from '@/lib/geo/cities';
+import { matchMastersForTask } from '@/lib/matching/matcher';
+import { pushNotification } from '@/lib/notifications/store';
+import { categoryName } from '@/lib/tasks/categories';
 import type { TaskDraft } from '@/lib/ai/types';
-import type { Language } from '@/lib/db/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -39,6 +41,31 @@ export async function POST(request: Request) {
     const task = await db.createTask(
       taskFromDraft(profileId, draft, cityId, body.rawInput ?? draft.work_details ?? '')
     );
+
+    // notify matching masters about the new task (in-app, capped)
+    try {
+      const allMasters = await db.findMasters({});
+      const matched = matchMastersForTask(task, allMasters).masters.slice(0, 20);
+      const city = cityName(task.cityId, task.language);
+      const work = task.categories[0] ? categoryName(task.categories[0], task.language) : '';
+      const text =
+        task.language === 'he'
+          ? `🆕 בקשה חדשה: ${work} · ${city}`
+          : task.language === 'ru'
+            ? `🆕 Новая заявка: ${work} · ${city}`
+            : `🆕 New request: ${work} · ${city}`;
+      for (const master of matched) {
+        pushNotification({
+          userId: master.userId,
+          type: 'new_task',
+          taskId: task.id,
+          text,
+          link: `/master/feed?task=${task.id}`,
+        });
+      }
+    } catch (e) {
+      console.error('[POST /api/tasks] notify masters failed:', (e as Error).message);
+    }
 
     return NextResponse.json({ task });
   } catch (error) {

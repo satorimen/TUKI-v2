@@ -164,5 +164,42 @@
     "when": "Когда начать",
     "sending": "Секунду…",
     "example": "Например: покрасить спальню 20 м², краска есть"
+  },
+  "account": {
+    "title": "Аккаунт",
+    "notLoggedIn": "Вы не вошли",
+    "loginSubtitle": "Вход или регистрация по email",
+    "name": "Имя",
+    "whatsapp": "WhatsApp для связи",
+    "save": "Сохранить",
+    "saved": "Сохранено",
+    "logout": "Выйти",
+    "masterCabinet": "Кабинет мастера"
+  },
+  "cabinet": {
+    "title": "Кабинет мастера",
+    "statusActive": "Принимаю заявки",
+    "statusInactive": "Пауза",
+    "rating": "Рейтинг",
+    "reviews": "Отзывы",
+    "completed": "Выполнено",
+    "activeBids": "Мои отклики",
+    "noBids": "Пока нет откликов — загляните в ленту",
+    "edit": "Редактировать профиль",
+    "feed": "Лента заявок",
+    "bid_pending": "Ожидает",
+    "bid_selected": "Выбран ✔",
+    "bid_rejected": "Не выбран"
+  },
+  "myTasksFilters": {
+    "all": "Все",
+    "published": "Активные",
+    "assigned": "В работе",
+    "completed": "Завершены"
+  },
+  "taskActions": {
+    "cancel": "Отменить заявку",
+    "cancelled": "Заявка отменена",
+    "bids": "откликов"
   }
 }

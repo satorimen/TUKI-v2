@@ -27,7 +27,18 @@ export async function POST(request: Request) {
       bio?: string;
       fullName?: string;
       whatsapp?: string;
+      /** standalone toggle: just flip active status */
+      isActive?: boolean;
     };
+
+    // quick toggle mode — only isActive provided
+    if (typeof body.isActive === 'boolean' && !body.specializations) {
+      const { db } = getDb();
+      const master = await db.getMasterByUserId(profileId);
+      if (!master) return NextResponse.json({ error: 'master_profile_required' }, { status: 403 });
+      const updated = await db.updateMaster(master.id, { isActive: body.isActive });
+      return NextResponse.json({ master: updated });
+    }
 
     // validation
     const specializations = (body.specializations ?? []).filter((s) =>

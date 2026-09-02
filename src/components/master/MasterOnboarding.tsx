@@ -16,9 +16,12 @@ import type { Profile, MasterProfile } from '@/lib/db/types';
 export default function MasterOnboarding({
   profile,
   master,
+  onSaved,
 }: {
   profile: Profile;
   master: MasterProfile | null;
+  /** when provided, called after successful save instead of the standalone success screen */
+  onSaved?: () => void;
 }) {
   const locale = useLocale() as 'he' | 'ru' | 'en';
   const t = useTranslations('master');
@@ -69,6 +72,10 @@ export default function MasterOnboarding({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+      if (onSaved) {
+        onSaved();
+        return;
+      }
       setSaved(true);
       router.refresh();
     } catch (e) {
