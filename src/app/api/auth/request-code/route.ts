@@ -40,9 +40,17 @@ export async function POST(request: Request) {
         },
       });
       if (error) {
+        // Log the full error so email delivery failures are diagnosable.
+        // Common cause: custom SMTP (e.g. Resend) with an unverified sender
+        // domain -> upstream 500 "domain is not verified".
+        console.error('[request-code] supabase signInWithOtp failed:', {
+          message: error.message,
+          status: error.status,
+          name: error.name,
+          code: (error as { code?: string }).code,
+        });
         // 429 = Supabase email rate limit (built-in SMTP is heavily throttled)
-        const status = error.status === 429 ? 429 : 400;
-        console.error('[request-code] supabase signInWithOtp:', error.message);
+        const status = error.status === 429 ? 429 : 502;
         return NextResponse.json(
           { error: status === 429 ? 'rate_limited' : 'send_failed' },
           { status }
