@@ -25,6 +25,15 @@ export const CATEGORY_IDS = [
   'pest_control',
   'post_renovation_cleaning',
   'gardening',
+  'flooring',
+  'kitchen',
+  'furniture_assembly',
+  'metalwork',
+  'aluminum',
+  'demolition',
+  'smart_home',
+  'water_heating',
+  'moving',
   'other',
 ] as const;
 
@@ -53,6 +62,15 @@ export const CATEGORIES: Category[] = [
   { id: 'pest_control', icon: '🐜', name: { he: 'הדברה', ru: 'Дезинсекция', en: 'Pest control' } },
   { id: 'post_renovation_cleaning', icon: '🧹', name: { he: 'ניקיון אחרי שיפוץ', ru: 'Уборка после ремонта', en: 'Post-renovation cleaning' } },
   { id: 'gardening', icon: '🌿', name: { he: 'גינון', ru: 'Садовые работы', en: 'Gardening' } },
+  { id: 'flooring', icon: '🪵', name: { he: 'פרקט ולמינציה', ru: 'Паркет и ламинат', en: 'Parquet & Laminate' } },
+  { id: 'kitchen', icon: '🍽', name: { he: 'מטבחים וארונות', ru: 'Кухни и шкафы', en: 'Kitchens & Cabinets' } },
+  { id: 'furniture_assembly', icon: '🪑', name: { he: 'הרכבת רהיטים', ru: 'Сборка мебели', en: 'Furniture assembly' } },
+  { id: 'metalwork', icon: '⚙️', name: { he: 'מסגרות וריתוך', ru: 'Металл и сварка', en: 'Metal & Welding' } },
+  { id: 'aluminum', icon: '🪟', name: { he: 'אלומיניום וזיגוג', ru: 'Алюминий и остекление', en: 'Aluminum & Glazing' } },
+  { id: 'demolition', icon: '🔨', name: { he: 'הריסה ופינוי', ru: 'Демонтаж', en: 'Demolition' } },
+  { id: 'smart_home', icon: '📡', name: { he: 'בית חכם ותקשורת', ru: 'Умный дом и слаботочка', en: 'Smart home & Low-voltage' } },
+  { id: 'water_heating', icon: '🔥', name: { he: 'דודי שמש ומים', ru: 'Бойлеры и водонагреватели', en: 'Boilers & Water heaters' } },
+  { id: 'moving', icon: '📦', name: { he: 'הובלות ופינוי', ru: 'Переезды и вывоз', en: 'Moving & Hauling' } },
   { id: 'other', icon: '🔧', name: { he: 'אחר', ru: 'Другое', en: 'Other' } },
 ];
 

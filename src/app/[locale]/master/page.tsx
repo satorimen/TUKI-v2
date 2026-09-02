@@ -56,7 +56,14 @@ export default async function MasterPage({
         <MasterCabinet />
       ) : (
         <main className="px-5">
-          <MasterOnboarding profile={profile} master={null} />
+          <MasterOnboarding
+            initial={{
+              fullName: profile.fullName,
+              whatsappNumber: profile.whatsappNumber,
+              specializations: [],
+              workCities: [],
+            }}
+          />
         </main>
       )}
     </>

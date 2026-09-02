@@ -38,6 +38,13 @@ export const CITIES: City[] = [
   { id: 'ness-ziona', name: { he: 'נס ציונה', ru: 'Нес-Циона', en: 'Ness Ziona' }, cluster: 'gush_dan' },
   { id: 'yavne', name: { he: 'יבנה', ru: 'Явне', en: 'Yavne' }, cluster: 'gush_dan' },
   { id: 'elad', name: { he: 'אלעד', ru: 'Эльад', en: 'Elad' }, cluster: 'gush_dan' },
+  { id: 'rosh-haayin', name: { he: 'ראש העין', ru: 'Рош-ха-Аин', en: 'Rosh HaAyin' }, cluster: 'gush_dan' },
+  { id: 'shoham', name: { he: 'שוהם', ru: 'Шохам', en: 'Shoham' }, cluster: 'gush_dan' },
+  { id: 'gedera', name: { he: 'גדרה', ru: 'Гедера', en: 'Gedera' }, cluster: 'gush_dan' },
+  { id: 'gan-yavne', name: { he: 'גן יבנה', ru: 'Ган-Явне', en: 'Gan Yavne' }, cluster: 'gush_dan' },
+  { id: 'kiryat-ekron', name: { he: 'קריית עקרון', ru: 'Кирьят-Экрон', en: 'Kiryat Ekron' }, cluster: 'gush_dan' },
+  { id: 'ganei-tikva', name: { he: 'גני תקווה', ru: 'Ганей-Тиква', en: 'Ganei Tikva' }, cluster: 'gush_dan' },
+  { id: 'azor', name: { he: 'אזור', ru: 'Азор', en: 'Azor' }, cluster: 'gush_dan' },
 
   // ── Jerusalem area ────────────────────────────────────────────────────
   { id: 'jerusalem', name: { he: 'ירושלים', ru: 'Иерусалим', en: 'Jerusalem' }, cluster: 'jerusalem' },
@@ -45,6 +52,9 @@ export const CITIES: City[] = [
   { id: 'modiin', name: { he: 'מודיעין', ru: 'Модиин', en: 'Modi\'in' }, cluster: 'jerusalem' },
   { id: 'maale-adumim', name: { he: 'מעלה אדומים', ru: 'Маале-Адумим', en: 'Ma\'ale Adumim' }, cluster: 'jerusalem' },
   { id: 'mevaseret-zion', name: { he: 'מבשרת ציון', ru: 'Мевасерет-Цион', en: 'Mevaseret Zion' }, cluster: 'jerusalem' },
+  { id: 'givat-zeev', name: { he: 'גבעת זאב', ru: 'Гиват-Зеэв', en: 'Giv\'at Ze\'ev' }, cluster: 'jerusalem' },
+  { id: 'efrat', name: { he: 'אפרת', ru: 'Эфрат', en: 'Efrat' }, cluster: 'jerusalem' },
+  { id: 'beitar-illit', name: { he: 'ביתר עילית', ru: 'Бейтар-Илит', en: 'Beitar Illit' }, cluster: 'jerusalem' },
 
   // ── Haifa & North ─────────────────────────────────────────────────────
   { id: 'haifa', name: { he: 'חיפה', ru: 'Хайфа', en: 'Haifa' }, cluster: 'haifa_north' },
@@ -62,6 +72,13 @@ export const CITIES: City[] = [
   { id: 'nesher', name: { he: 'נשר', ru: 'Нешер', en: 'Nesher' }, cluster: 'haifa_north' },
   { id: 'tirat-carmel', name: { he: 'טירת כרמל', ru: 'Тират-Кармель', en: 'Tirat Carmel' }, cluster: 'haifa_north' },
   { id: 'zichron-yaakov', name: { he: 'זכרון יעקב', ru: 'Зихрон-Яаков', en: 'Zichron Ya\'akov' }, cluster: 'haifa_north' },
+  { id: 'kiryat-ata', name: { he: 'קריית אתא', ru: 'Кирьят-Ата', en: 'Kiryat Ata' }, cluster: 'haifa_north' },
+  { id: 'migdal-haemek', name: { he: 'מגדל העמק', ru: 'Мигдаль-ха-Эмек', en: 'Migdal HaEmek' }, cluster: 'haifa_north' },
+  { id: 'nof-hagalil', name: { he: 'נוף הגליל', ru: 'Ноф-ха-Галиль', en: 'Nof HaGalil' }, cluster: 'haifa_north' },
+  { id: 'yokneam', name: { he: 'יקנעם', ru: 'Йокнеам', en: 'Yokneam' }, cluster: 'haifa_north' },
+  { id: 'beit-shean', name: { he: 'בית שאן', ru: 'Бейт-Шеан', en: 'Beit She\'an' }, cluster: 'haifa_north' },
+  { id: 'maalot-tarshiha', name: { he: 'מעלות-תרשיחא', ru: 'Маалот-Таршиха', en: 'Ma\'alot-Tarshiha' }, cluster: 'haifa_north' },
+  { id: 'pardes-hanna', name: { he: 'פרדס חנה-כרכור', ru: 'Пардес-Хана-Каркур', en: 'Pardes Hanna-Karkur' }, cluster: 'haifa_north' },
 
   // ── South (Beer Sheva & Negev) ────────────────────────────────────────
   { id: 'beer-sheva', name: { he: 'באר שבע', ru: 'Беэр-Шева', en: 'Beer Sheva' }, cluster: 'south' },
@@ -75,6 +92,10 @@ export const CITIES: City[] = [
   { id: 'arad', name: { he: 'ערד', ru: 'Арад', en: 'Arad' }, cluster: 'south' },
   { id: 'ofakim', name: { he: 'אופקים', ru: 'Офаким', en: 'Ofakim' }, cluster: 'south' },
   { id: 'eilat', name: { he: 'אילת', ru: 'Эйлат', en: 'Eilat' }, cluster: 'south' },
+  { id: 'rahat', name: { he: 'רהט', ru: 'Рахат', en: 'Rahat' }, cluster: 'south' },
+  { id: 'yeruham', name: { he: 'ירוחם', ru: 'Йерухам', en: 'Yeruham' }, cluster: 'south' },
+  { id: 'mitzpe-ramon', name: { he: 'מצפה רמון', ru: 'Мицпе-Рамон', en: 'Mitzpe Ramon' }, cluster: 'south' },
+  { id: 'omer', name: { he: 'עומר', ru: 'Омер', en: 'Omer' }, cluster: 'south' },
 ];
 
 const CITY_BY_ID = new Map(CITIES.map((c) => [c.id, c]));

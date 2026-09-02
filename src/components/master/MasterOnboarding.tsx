@@ -3,83 +3,143 @@
 import { useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { CATEGORIES, categoryName } from '@/lib/tasks/categories';
-import { CITIES, cityName } from '@/lib/geo/cities';
-import { CLUSTERS } from '@/lib/geo/clusters';
-import type { Profile, MasterProfile } from '@/lib/db/types';
+import { CATEGORIES, type CategoryId } from '@/lib/tasks/categories';
+import { CITIES } from '@/lib/geo/cities';
+import { CLUSTERS, type ClusterId } from '@/lib/geo/clusters';
+import type { Language } from '@/lib/db/types';
 
-/**
- * Master onboarding / profile edit form.
- * Shown on /master when the signed-in user has no master profile yet
- * (or as an edit form when they do).
- */
-export default function MasterOnboarding({
-  profile,
-  master,
-  onSaved,
-}: {
-  profile: Profile;
-  master: MasterProfile | null;
-  /** when provided, called after successful save instead of the standalone success screen */
-  onSaved?: () => void;
-}) {
-  const locale = useLocale() as 'he' | 'ru' | 'en';
+interface Props {
+  initial?: {
+    fullName?: string | null;
+    whatsappNumber?: string | null;
+    specializations?: CategoryId[];
+    workCities?: string[];
+    experienceYears?: number | null;
+    bio?: string | null;
+  };
+}
+
+const ALL_CITY_IDS = CITIES.map((c) => c.id);
+
+export default function MasterOnboarding({ initial }: Props) {
   const t = useTranslations('master');
+  const tc = useTranslations('common');
+  const locale = useLocale() as Language;
   const router = useRouter();
 
-  const [specializations, setSpecializations] = useState<string[]>(master?.specializations ?? []);
-  const [workCities, setWorkCities] = useState<string[]>(master?.workCities ?? []);
-  const [experienceYears, setExperienceYears] = useState<string>(
-    master?.experienceYears != null ? String(master.experienceYears) : ''
+  const [fullName, setFullName] = useState(initial?.fullName ?? '');
+  const [whatsapp, setWhatsapp] = useState(initial?.whatsappNumber ?? '');
+  const [specs, setSpecs] = useState<Set<CategoryId>>(
+    new Set(initial?.specializations ?? [])
   );
-  const [fullName, setFullName] = useState(profile.fullName ?? '');
-  const [whatsapp, setWhatsapp] = useState(profile.whatsappNumber ? `+${profile.whatsappNumber}` : '');
-  const [bio, setBio] = useState(master?.bio ?? '');
+  const [cities, setCities] = useState<Set<string>>(new Set(initial?.workCities ?? []));
+  const [experience, setExperience] = useState<string>(
+    initial?.experienceYears != null ? String(initial.experienceYears) : ''
+  );
+  const [bio, setBio] = useState(initial?.bio ?? '');
+
+  const [citySearch, setCitySearch] = useState('');
+  const [openClusters, setOpenClusters] = useState<Set<ClusterId>>(new Set());
+
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const citiesByCluster = useMemo(
-    () =>
-      Object.values(CLUSTERS).map((cluster) => ({
-        cluster,
-        cities: CITIES.filter((c) => c.cluster === cluster.id),
-      })),
-    []
-  );
+  const citiesByCluster = useMemo(() => {
+    const map = new Map<ClusterId, typeof CITIES>();
+    for (const cluster of CLUSTERS) map.set(cluster.id, []);
+    for (const city of CITIES) map.get(city.cluster)?.push(city);
+    return map;
+  }, []);
 
-  const toggle = (list: string[], setList: (v: string[]) => void, value: string) =>
-    setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
+  const search = citySearch.trim().toLowerCase();
+  const matchedCityIds = useMemo(() => {
+    if (!search) return null;
+    return new Set(
+      CITIES.filter((c) =>
+        Object.values(c.name).some((n) => n.toLowerCase().includes(search))
+      ).map((c) => c.id)
+    );
+  }, [search]);
 
-  const valid = specializations.length > 0 && workCities.length > 0;
+  const allSelected = cities.size === ALL_CITY_IDS.length && ALL_CITY_IDS.length > 0;
 
-  async function save() {
-    if (!valid || saving) return;
+  function toggleSpec(id: CategoryId) {
+    setSpecs((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  function toggleCity(id: string) {
+    setCities((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  function toggleCluster(id: ClusterId) {
+    setOpenClusters((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  function clusterState(clusterId: ClusterId): 'all' | 'some' | 'none' {
+    const ids = citiesByCluster.get(clusterId) ?? [];
+    const selected = ids.filter((c) => cities.has(c.id)).length;
+    if (selected === 0) return 'none';
+    if (selected === ids.length) return 'all';
+    return 'some';
+  }
+
+  function toggleClusterAll(clusterId: ClusterId) {
+    const ids = (citiesByCluster.get(clusterId) ?? []).map((c) => c.id);
+    setCities((prev) => {
+      const next = new Set(prev);
+      const state = clusterState(clusterId);
+      if (state === 'all') ids.forEach((id) => next.delete(id));
+      else ids.forEach((id) => next.add(id));
+      return next;
+    });
+  }
+
+  function toggleNationwide() {
+    setCities((prev) =>
+      prev.size === ALL_CITY_IDS.length ? new Set() : new Set(ALL_CITY_IDS)
+    );
+  }
+
+  const canSave = specs.size > 0 && cities.size > 0;
+
+  async function handleSave() {
+    if (!canSave) {
+      setError(t('validation'));
+      return;
+    }
+    setError('');
     setSaving(true);
-    setError(null);
     try {
       const res = await fetch('/api/master/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          specializations,
-          workCities,
-          experienceYears: experienceYears ? parseInt(experienceYears, 10) : undefined,
-          fullName: fullName || undefined,
-          whatsapp: whatsapp || undefined,
-          bio: bio || undefined,
+          fullName: fullName.trim() || null,
+          whatsappNumber: whatsapp.trim() || null,
+          specializations: [...specs],
+          workCities: [...cities],
+          experienceYears: experience ? Number(experience) : null,
+          bio: bio.trim() || null,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      if (onSaved) {
-        onSaved();
-        return;
-      }
+      if (!res.ok) throw new Error('save failed');
       setSaved(true);
-      router.refresh();
-    } catch (e) {
-      setError(t('validation'));
+      setTimeout(() => router.push('/master/feed'), 900);
+    } catch {
+      setError(tc('error'));
     } finally {
       setSaving(false);
     }
@@ -87,134 +147,325 @@ export default function MasterOnboarding({
 
   if (saved) {
     return (
-      <div className="mx-auto max-w-xl py-16 text-center">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-4xl">
-          🎉
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-on-primary">
+          ✓
         </div>
-        <h1 className="mb-3 text-2xl font-bold">{t('saved')}</h1>
+        <p className="text-lg font-semibold text-on-surface">{t('saved')}</p>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl space-y-6 py-8">
-      <div>
-        <h1 className="text-2xl font-bold">{t('onboardingTitle')}</h1>
-        <p className="mt-1 text-on-surface-variant">{t('onboardingSubtitle')}</p>
-      </div>
+    <div className="mx-auto max-w-md px-4 pb-40 pt-4">
+      <header className="mb-5">
+        <h1 className="text-xl font-bold text-on-surface text-balance">
+          {t('onboardingTitle')}
+        </h1>
+        <p className="mt-1 text-sm leading-relaxed text-on-surface-variant text-pretty">
+          {t('onboardingSubtitle')}
+        </p>
+      </header>
 
-      {/* Name + WhatsApp */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-1 block text-sm font-medium">{t('fullName')}</label>
-          <input
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-xl border border-outline bg-transparent px-3 py-2.5 outline-none focus:border-primary dark:border-outline"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">{t('whatsapp')}</label>
-          <input
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-            placeholder="050-1234567"
-            dir="ltr"
-            className="w-full rounded-xl border border-outline bg-transparent px-3 py-2.5 outline-none focus:border-primary dark:border-outline"
-          />
-          <p className="mt-1 text-xs text-on-surface-variant">{t('whatsappHint')}</p>
-        </div>
-      </div>
-
-      {/* Specializations */}
-      <div>
-        <label className="mb-2 block text-sm font-medium">
-          {t('specializations')} <span className="text-on-surface-variant">· {t('specializationsHint')}</span>
-        </label>
+      {/* ── Specializations ─────────────────────────── */}
+      <section className="mb-6">
+        <SectionHeader
+          title={t('specsSection')}
+          hint={t('specializationsHint')}
+          count={specs.size}
+        />
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.filter((c) => c.id !== 'other').map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => toggle(specializations, setSpecializations, c.id)}
-              className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-                specializations.includes(c.id)
-                  ? 'border-primary bg-primary text-on-primary'
-                  : 'border-outline text-on-surface-variant hover:border-primary dark:border-outline dark:text-on-surface-variant'
-              }`}
-            >
-              {c.icon} {categoryName(c.id, locale)}
-            </button>
-          ))}
+          {CATEGORIES.map((cat) => {
+            const active = specs.has(cat.id);
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => toggleSpec(cat.id)}
+                aria-pressed={active}
+                className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-sm transition ${
+                  active
+                    ? 'border-primary bg-primary text-on-primary'
+                    : 'border-outline/40 bg-surface-container text-on-surface active:scale-95'
+                }`}
+              >
+                <span aria-hidden className="text-base leading-none">
+                  {cat.icon}
+                </span>
+                <span>{cat.name[locale]}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
-      {/* Work cities grouped by cluster */}
-      <div>
-        <label className="mb-2 block text-sm font-medium">
-          {t('workCities')} <span className="text-on-surface-variant">· {t('workCitiesHint')}</span>
-        </label>
-        <div className="space-y-3">
-          {citiesByCluster.map(({ cluster, cities }) => (
-            <div key={cluster.id}>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
-                {cluster.name[locale]}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {cities.map((city) => (
-                  <button
-                    key={city.id}
-                    type="button"
-                    onClick={() => toggle(workCities, setWorkCities, city.id)}
-                    className={`rounded-lg border px-3 py-1.5 text-sm transition ${
-                      workCities.includes(city.id)
-                        ? 'border-primary bg-primary-container text-on-primary-container dark:bg-primary-container dark:text-primary'
-                        : 'border-outline text-on-surface-variant/70 hover:border-primary dark:border-outline dark:text-on-surface-variant'
-                    }`}
-                  >
-                    {cityName(city.id, locale)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ── Cities ──────────────────────────────────── */}
+      <section className="mb-6">
+        <SectionHeader
+          title={t('citiesSection')}
+          hint={t('workCitiesHint')}
+          count={cities.size}
+        />
 
-      {/* Experience + bio */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div>
-          <label className="mb-1 block text-sm font-medium">{t('experience')}</label>
+        <div className="mb-3 flex items-center gap-2">
           <input
-            inputMode="numeric"
-            value={experienceYears}
-            onChange={(e) => setExperienceYears(e.target.value.replace(/\D/g, '').slice(0, 2))}
-            dir="ltr"
-            className="w-full rounded-xl border border-outline bg-transparent px-3 py-2.5 outline-none focus:border-primary dark:border-outline"
+            type="search"
+            inputMode="search"
+            value={citySearch}
+            onChange={(e) => setCitySearch(e.target.value)}
+            placeholder={t('searchCity')}
+            className="min-w-0 flex-1 rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
           />
+          {cities.size > 0 && (
+            <button
+              type="button"
+              onClick={() => setCities(new Set())}
+              className="shrink-0 rounded-xl px-3 py-2.5 text-sm font-medium text-on-surface-variant active:scale-95"
+            >
+              {t('clearCities')}
+            </button>
+          )}
         </div>
-        <div className="sm:col-span-2">
-          <label className="mb-1 block text-sm font-medium">{t('bio')}</label>
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder={t('bioPlaceholder')}
-            rows={2}
-            className="w-full resize-none rounded-xl border border-outline bg-transparent px-3 py-2.5 outline-none focus:border-primary dark:border-outline"
-          />
+
+        <button
+          type="button"
+          onClick={toggleNationwide}
+          aria-pressed={allSelected}
+          className={`mb-3 flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-medium transition ${
+            allSelected
+              ? 'border-primary bg-primary/15 text-on-surface'
+              : 'border-outline/40 bg-surface-container text-on-surface active:scale-[0.99]'
+          }`}
+        >
+          <span className="flex items-center gap-2">
+            <span aria-hidden>🇮🇱</span>
+            {t('wholeCountry')}
+          </span>
+          <span
+            className={`flex h-5 w-5 items-center justify-center rounded-full border text-xs ${
+              allSelected
+                ? 'border-primary bg-primary text-on-primary'
+                : 'border-outline/60'
+            }`}
+          >
+            {allSelected ? '✓' : ''}
+          </span>
+        </button>
+
+        {/* Search results (flat) */}
+        {matchedCityIds ? (
+          <div className="flex flex-wrap gap-2">
+            {CITIES.filter((c) => matchedCityIds.has(c.id)).map((city) => (
+              <CityChip
+                key={city.id}
+                label={city.name[locale]}
+                active={cities.has(city.id)}
+                onClick={() => toggleCity(city.id)}
+              />
+            ))}
+            {matchedCityIds.size === 0 && (
+              <p className="py-3 text-sm text-on-surface-variant">{t('nothingFound')}</p>
+            )}
+          </div>
+        ) : (
+          /* Collapsible region groups */
+          <div className="flex flex-col gap-2">
+            {CLUSTERS.map((cluster) => {
+              const list = citiesByCluster.get(cluster.id) ?? [];
+              const state = clusterState(cluster.id);
+              const open = openClusters.has(cluster.id);
+              const selectedInCluster = list.filter((c) => cities.has(c.id)).length;
+              return (
+                <div
+                  key={cluster.id}
+                  className="overflow-hidden rounded-xl border border-outline/30 bg-surface-container/60"
+                >
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={() => toggleCluster(cluster.id)}
+                      className="flex flex-1 items-center gap-2 px-4 py-3 text-start"
+                      aria-expanded={open}
+                    >
+                      <span
+                        className={`text-xs text-on-surface-variant transition-transform ${
+                          open ? 'rotate-90' : ''
+                        }`}
+                        aria-hidden
+                      >
+                        ▶
+                      </span>
+                      <span className="text-sm font-semibold text-on-surface">
+                        {cluster.name[locale]}
+                      </span>
+                      {selectedInCluster > 0 && (
+                        <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-semibold text-primary">
+                          {selectedInCluster}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleClusterAll(cluster.id)}
+                      className={`mr-2 shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition active:scale-95 ${
+                        state === 'all'
+                          ? 'bg-primary text-on-primary'
+                          : 'bg-surface-container-high text-on-surface-variant'
+                      }`}
+                    >
+                      {t('selectAllRegion')}
+                    </button>
+                  </div>
+                  {open && (
+                    <div className="flex flex-wrap gap-2 border-t border-outline/20 p-3">
+                      {list.map((city) => (
+                        <CityChip
+                          key={city.id}
+                          label={city.name[locale]}
+                          active={cities.has(city.id)}
+                          onClick={() => toggleCity(city.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ── Contact / about ─────────────────────────── */}
+      <section className="mb-6">
+        <SectionHeader title={t('contactSection')} />
+        <div className="flex flex-col gap-3">
+          <Field label={t('fullName')}>
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none focus:border-primary"
+            />
+          </Field>
+          <Field label={t('whatsapp')} hint={t('whatsappHint')}>
+            <input
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              inputMode="tel"
+              placeholder="+972 5X-XXX-XXXX"
+              className="w-full rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
+            />
+          </Field>
+          <Field label={t('experience')}>
+            <input
+              value={experience}
+              onChange={(e) => setExperience(e.target.value.replace(/\D/g, '').slice(0, 2))}
+              inputMode="numeric"
+              className="w-full rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none focus:border-primary"
+            />
+          </Field>
+          <Field label={t('bio')}>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={3}
+              placeholder={t('bioPlaceholder')}
+              className="w-full resize-none rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
+            />
+          </Field>
+        </div>
+      </section>
+
+      {/* ── Sticky save bar ─────────────────────────── */}
+      <div className="fixed inset-x-0 bottom-[4.5rem] z-10 mx-auto max-w-md px-4">
+        <div className="rounded-2xl border border-outline/30 bg-surface-container-high/95 p-3 shadow-lg shadow-black/30 backdrop-blur">
+          {error && (
+            <p className="mb-2 text-center text-xs font-medium text-error">{error}</p>
+          )}
+          <div className="mb-2 flex items-center justify-center gap-4 text-xs text-on-surface-variant">
+            <span>
+              {t('specializations')}: <b className="text-on-surface">{specs.size}</b>
+            </span>
+            <span>
+              {t('workCities')}: <b className="text-on-surface">{cities.size}</b>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!canSave || saving}
+            className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-on-primary transition active:scale-[0.99] disabled:opacity-40"
+          >
+            {saving ? tc('loading') : t('save')}
+          </button>
         </div>
       </div>
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <button
-        onClick={save}
-        disabled={!valid || saving}
-        className="w-full rounded-full bg-primary py-3.5 text-lg font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {t('save')}
-      </button>
-      {!valid && <p className="text-center text-sm text-on-surface-variant">{t('validation')}</p>}
     </div>
+  );
+}
+
+function SectionHeader({
+  title,
+  hint,
+  count,
+}: {
+  title: string;
+  hint?: string;
+  count?: number;
+}) {
+  return (
+    <div className="mb-3">
+      <div className="flex items-baseline gap-2">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-on-surface">{title}</h2>
+        {count != null && count > 0 && (
+          <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-semibold text-primary">
+            {count}
+          </span>
+        )}
+      </div>
+      {hint && <p className="mt-0.5 text-xs text-on-surface-variant">{hint}</p>}
+    </div>
+  );
+}
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium text-on-surface-variant">{label}</span>
+      {children}
+      {hint && <span className="mt-1 block text-xs text-on-surface-variant">{hint}</span>}
+    </label>
+  );
+}
+
+function CityChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-full border px-3 py-1.5 text-sm transition ${
+        active
+          ? 'border-primary bg-primary text-on-primary'
+          : 'border-outline/40 bg-surface-container text-on-surface active:scale-95'
+      }`}
+    >
+      {label}
+    </button>
   );
 }
