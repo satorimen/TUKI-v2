@@ -143,7 +143,7 @@ export default function TaskPage() {
     return (
       <>
         <Header />
-        <main className="px-4 py-16 text-center text-neutral-500">…</main>
+        <main className="px-4 py-16 text-center text-on-surface-variant">…</main>
       </>
     );
   }
@@ -167,7 +167,7 @@ export default function TaskPage() {
         {/* Task card + status */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{cityName(task.cityId, locale)}</h1>
-          <span className="rounded-full bg-tuki-100 px-3 py-1 text-sm font-medium text-tuki-700">
+          <span className="rounded-full bg-primary-container px-3 py-1 text-sm font-medium text-on-primary-container">
             {t(`status_${task.status}` as any)}
           </span>
         </div>
@@ -202,7 +202,7 @@ export default function TaskPage() {
         {(task.status === 'assigned' || task.status === 'completed') &&
           !state.view.myReview &&
           !reviewSent && (
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-outline-variant dark:bg-neutral-900">
               <h2 className="mb-4 font-bold">{t('reviewTitle')}</h2>
               <div className="space-y-3">
                 {(
@@ -237,12 +237,12 @@ export default function TaskPage() {
                   onChange={(e) => setReviewText(e.target.value)}
                   placeholder={t('reviewText')}
                   rows={3}
-                  className="w-full resize-none rounded-xl border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-600"
+                  className="w-full resize-none rounded-xl border border-outline bg-transparent px-3 py-2 dark:border-outline"
                 />
                 <button
                   onClick={submitReview}
                   disabled={sendingReview || Object.keys(scores).length < 5}
-                  className="w-full rounded-xl bg-tuki-500 py-3 font-semibold text-white transition hover:bg-tuki-600 disabled:opacity-40"
+                  className="w-full rounded-full bg-primary py-3 font-semibold text-white transition hover:bg-primary/90 disabled:opacity-40"
                 >
                   {t('submitReview')}
                 </button>
@@ -255,7 +255,7 @@ export default function TaskPage() {
           <div className="rounded-2xl border border-green-300 bg-green-50 p-5 text-center font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
             {t('reviewThanks')}
             {state.view.myReview?.text && (
-              <p className="mt-2 text-sm font-normal text-neutral-600 dark:text-neutral-400">
+              <p className="mt-2 text-sm font-normal text-on-surface-variant/70 dark:text-on-surface-variant">
                 «{state.view.myReview.text}»
               </p>
             )}
@@ -267,10 +267,10 @@ export default function TaskPage() {
           <>
             <h2 className="text-lg font-bold">
               {t('bidsTitle')}{' '}
-              <span className="text-neutral-400">({t('bidCount', { count: bids.length })})</span>
+              <span className="text-on-surface-variant">({t('bidCount', { count: bids.length })})</span>
             </h2>
             {bids.length === 0 && (
-              <p className="rounded-2xl border border-dashed border-neutral-300 p-8 text-center text-neutral-500 dark:border-neutral-700">
+              <p className="rounded-2xl border border-dashed border-outline p-8 text-center text-on-surface-variant dark:border-outline-variant">
                 {t('noBids')}
               </p>
             )}
@@ -279,11 +279,11 @@ export default function TaskPage() {
                 <div
                   key={bid.id}
                   className={`rounded-2xl border bg-white p-5 shadow-sm dark:bg-neutral-900 ${
-                    bid.id === bestMatchId ? 'border-tuki-400 ring-2 ring-tuki-200 dark:ring-tuki-900' : 'border-neutral-200 dark:border-neutral-700'
+                    bid.id === bestMatchId ? 'border-primary ring-2 ring-primary/40' : 'border-outline-variant'
                   }`}
                 >
                   {bid.id === bestMatchId && (
-                    <p className="mb-2 text-sm font-bold text-tuki-600">{t('bestMatch')}</p>
+                    <p className="mb-2 text-sm font-bold text-primary">{t('bestMatch')}</p>
                   )}
                   <div className="mb-3 flex flex-wrap items-center gap-3">
                     <span className="text-lg font-bold">{master?.name ?? '—'}</span>
@@ -293,7 +293,7 @@ export default function TaskPage() {
                       </span>
                     )}
                     {master?.experienceYears != null && (
-                      <span className="text-sm text-neutral-400">
+                      <span className="text-sm text-on-surface-variant">
                         {master.experienceYears}{' '}
                         {locale === 'he' ? 'שנים' : locale === 'ru' ? 'лет' : 'yrs'}
                       </span>
@@ -305,7 +305,7 @@ export default function TaskPage() {
                       {master.specializations.map((s) => (
                         <span
                           key={s}
-                          className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs dark:bg-neutral-800"
+                          className="rounded-full bg-secondary-container px-2.5 py-0.5 text-xs dark:bg-secondary-container"
                         >
                           {categoryName(s, locale)}
                         </span>
@@ -315,13 +315,13 @@ export default function TaskPage() {
 
                   <div className="mb-3 flex flex-wrap gap-4 text-sm">
                     {bid.price != null && (
-                      <span className="font-bold text-tuki-600">₪ {bid.price}</span>
+                      <span className="font-bold text-primary">₪ {bid.price}</span>
                     )}
-                    {bid.timeline && <span className="text-neutral-500">📅 {bid.timeline}</span>}
+                    {bid.timeline && <span className="text-on-surface-variant">📅 {bid.timeline}</span>}
                   </div>
 
                   {bid.message && (
-                    <p className="mb-4 rounded-xl bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+                    <p className="mb-4 rounded-xl bg-surface-container p-3 text-sm leading-relaxed text-on-surface-variant/70 dark:bg-secondary-container dark:text-on-surface-variant">
                       {bid.message}
                     </p>
                   )}
@@ -329,7 +329,7 @@ export default function TaskPage() {
                   <button
                     onClick={() => select(bid.id)}
                     disabled={selecting !== null}
-                    className="rounded-xl bg-tuki-500 px-6 py-2.5 font-semibold text-white transition hover:bg-tuki-600 disabled:opacity-40"
+                    className="rounded-full bg-primary px-6 py-2.5 font-semibold text-white transition hover:bg-primary/90 disabled:opacity-40"
                   >
                     {selecting === bid.id ? '…' : t('select')}
                   </button>
@@ -342,7 +342,7 @@ export default function TaskPage() {
               onClick={() => {
                 if (confirm(ta('cancelConfirm'))) cancelTask();
               }}
-              className="mt-6 w-full rounded-xl border border-neutral-800 py-3 text-sm font-medium text-neutral-500 transition active:scale-[0.98]"
+              className="mt-6 w-full rounded-xl border border-outline-variant py-3 text-sm font-medium text-on-surface-variant transition active:scale-[0.98]"
             >
               {ta('cancel')}
             </button>

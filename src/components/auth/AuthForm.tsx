@@ -62,9 +62,9 @@ export default function AuthForm({ onAuthed }: { onAuthed?: () => void }) {
   }
 
   return (
-    <div className="mx-auto max-w-sm rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <div className="mx-auto max-w-sm rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-outline-variant dark:bg-neutral-900">
       <h1 className="mb-1 text-xl font-bold">{t('title')}</h1>
-      <p className="mb-5 text-sm text-neutral-500">{t('subtitle')}</p>
+      <p className="mb-5 text-sm text-on-surface-variant">{t('subtitle')}</p>
 
       {step === 'email' ? (
         <>
@@ -76,12 +76,12 @@ export default function AuthForm({ onAuthed }: { onAuthed?: () => void }) {
             onKeyDown={(e) => e.key === 'Enter' && requestCode()}
             placeholder="you@example.com"
             dir="ltr"
-            className="mb-4 w-full rounded-xl border border-neutral-300 bg-transparent px-3 py-2.5 outline-none focus:border-tuki-500 dark:border-neutral-600"
+            className="mb-4 w-full rounded-xl border border-outline bg-transparent px-3 py-2.5 outline-none focus:border-primary dark:border-outline"
           />
           <button
             onClick={requestCode}
             disabled={loading || !email.includes('@')}
-            className="w-full rounded-xl bg-tuki-500 py-3 font-semibold text-white transition hover:bg-tuki-600 disabled:opacity-40"
+            className="w-full rounded-full bg-primary py-3 font-semibold text-white transition hover:bg-primary/90 disabled:opacity-40"
           >
             {t('requestCode')}
           </button>
@@ -95,7 +95,7 @@ export default function AuthForm({ onAuthed }: { onAuthed?: () => void }) {
             onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
             onKeyDown={(e) => e.key === 'Enter' && verify()}
             dir="ltr"
-            className="w-full rounded-xl border border-neutral-300 bg-transparent px-3 py-2.5 text-center text-2xl tracking-[0.5em] outline-none focus:border-tuki-500 dark:border-neutral-600"
+            className="w-full rounded-xl border border-outline bg-transparent px-3 py-2.5 text-center text-2xl tracking-[0.5em] outline-none focus:border-primary dark:border-outline"
           />
           {devCode && (
             <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-center text-sm text-amber-700 dark:bg-amber-900/30">
@@ -105,7 +105,7 @@ export default function AuthForm({ onAuthed }: { onAuthed?: () => void }) {
           <button
             onClick={verify}
             disabled={loading || code.length !== 6}
-            className="mt-4 w-full rounded-xl bg-tuki-500 py-3 font-semibold text-white transition hover:bg-tuki-600 disabled:opacity-40"
+            className="mt-4 w-full rounded-full bg-primary py-3 font-semibold text-white transition hover:bg-primary/90 disabled:opacity-40"
           >
             {t('verify')}
           </button>

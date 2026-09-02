@@ -43,11 +43,11 @@ export default function AdminPage() {
     <>
       <Header />
       <main className="mx-auto max-w-4xl space-y-6 px-4 py-8">
-        {state.status === 'loading' && <p className="text-neutral-400">…</p>}
+        {state.status === 'loading' && <p className="text-on-surface-variant">…</p>}
 
         {state.status === 'auth' && (
           <div className="space-y-4 py-8">
-            <p className="text-center text-neutral-500">{t('loginAsAdmin')}</p>
+            <p className="text-center text-on-surface-variant">{t('loginAsAdmin')}</p>
             <AuthForm onAuthed={load} />
           </div>
         )}
@@ -59,7 +59,7 @@ export default function AdminPage() {
             {/* Funnel */}
             <div className="grid grid-cols-3 gap-4">
               {[
-                { label: t('published'), value: published, color: 'bg-tuki-500' },
+                { label: t('published'), value: published, color: 'bg-primary' },
                 { label: t('assigned'), value: assigned, color: 'bg-amber-500' },
                 { label: t('completed'), value: completed, color: 'bg-green-600' },
               ].map(({ label, value, color }) => {
@@ -67,11 +67,11 @@ export default function AdminPage() {
                 return (
                   <div
                     key={label}
-                    className="rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900"
+                    className="rounded-2xl border border-neutral-200 bg-white p-4 dark:border-outline-variant dark:bg-neutral-900"
                   >
                     <p className="text-3xl font-bold">{value}</p>
-                    <p className="mb-2 text-sm text-neutral-500">{label}</p>
-                    <div className="h-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800">
+                    <p className="mb-2 text-sm text-on-surface-variant">{label}</p>
+                    <div className="h-1.5 rounded-full bg-secondary-container dark:bg-secondary-container">
                       <div
                         className={`h-1.5 rounded-full ${color}`}
                         style={{ width: `${(value / max) * 100}%` }}
@@ -92,31 +92,31 @@ export default function AdminPage() {
               ].map(([label, value]) => (
                 <div
                   key={label as string}
-                  className="rounded-2xl border border-neutral-200 bg-white p-4 text-center dark:border-neutral-700 dark:bg-neutral-900"
+                  className="rounded-2xl border border-neutral-200 bg-white p-4 text-center dark:border-outline-variant dark:bg-neutral-900"
                 >
                   <p className="text-2xl font-bold">{value as number}</p>
-                  <p className="text-sm text-neutral-500">{label as string}</p>
+                  <p className="text-sm text-on-surface-variant">{label as string}</p>
                 </div>
               ))}
             </div>
 
             {/* Top masters */}
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-outline-variant dark:bg-neutral-900">
               <h2 className="mb-3 font-bold">{t('topMasters')}</h2>
               <table className="w-full text-sm">
                 <tbody>
                   {state.stats.topMasters.map((m, i) => (
-                    <tr key={m.id} className="border-t border-neutral-100 dark:border-neutral-800">
-                      <td className="py-2 pe-2 text-neutral-400">{i + 1}</td>
+                    <tr key={m.id} className="border-t border-neutral-100 dark:border-outline-variant">
+                      <td className="py-2 pe-2 text-on-surface-variant">{i + 1}</td>
                       <td className="py-2 font-medium">{m.name}</td>
                       <td className="py-2 text-amber-500">★ {m.rating.toFixed(1)}</td>
-                      <td className="py-2 text-neutral-400">{m.reviewsCount} 💬</td>
-                      <td className="py-2 text-neutral-400">{m.completedTasks} ✅</td>
+                      <td className="py-2 text-on-surface-variant">{m.reviewsCount} 💬</td>
+                      <td className="py-2 text-on-surface-variant">{m.completedTasks} ✅</td>
                     </tr>
                   ))}
                   {state.stats.topMasters.length === 0 && (
                     <tr>
-                      <td className="py-4 text-center text-neutral-400">—</td>
+                      <td className="py-4 text-center text-on-surface-variant">—</td>
                     </tr>
                   )}
                 </tbody>

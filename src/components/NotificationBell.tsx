@@ -58,7 +58,7 @@ export default function NotificationBell() {
       <button
         onClick={toggle}
         aria-label={t('title')}
-        className="relative rounded-lg p-1.5 text-xl transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        className="relative rounded-lg p-1.5 text-xl transition hover:bg-secondary-container dark:hover:bg-secondary-container"
       >
         🔔
         {unread > 0 && (
@@ -69,12 +69,12 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute end-0 top-full z-20 mt-2 w-72 rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl dark:border-neutral-700 dark:bg-neutral-900">
-          <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <div className="absolute end-0 top-full z-20 mt-2 w-72 rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl dark:border-outline-variant dark:bg-neutral-900">
+          <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
             {t('title')}
           </p>
           {items.length === 0 && (
-            <p className="px-3 py-4 text-center text-sm text-neutral-400">{t('empty')}</p>
+            <p className="px-3 py-4 text-center text-sm text-on-surface-variant">{t('empty')}</p>
           )}
           <div className="max-h-72 overflow-y-auto">
             {items.map((n) => (
@@ -82,8 +82,8 @@ export default function NotificationBell() {
                 key={n.id}
                 href={n.link as any}
                 onClick={() => setOpen(false)}
-                className={`block rounded-xl px-3 py-2.5 text-sm transition hover:bg-neutral-50 dark:hover:bg-neutral-800 ${
-                  n.read ? 'text-neutral-500' : 'font-medium'
+                className={`block rounded-xl px-3 py-2.5 text-sm transition hover:bg-surface-container dark:hover:bg-secondary-container ${
+                  n.read ? 'text-on-surface-variant' : 'font-medium'
                 }`}
               >
                 {n.text}

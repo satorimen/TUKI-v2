@@ -3,7 +3,11 @@
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 
-/** Mobile app bottom tab bar: home / [+ new] / my tasks / masters */
+/**
+ * M3 Navigation bar (https://m3.material.io/components/navigation-bar):
+ * pill-shaped active indicator (secondary-container) behind the icon,
+ * central FAB as the primary action.
+ */
 export default function BottomNav() {
   const t = useTranslations('nav');
   const pathname = usePathname();
@@ -15,24 +19,17 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-800/80 bg-[#141414]/95 backdrop-blur-md">
-      <div
-        className="relative mx-auto flex max-w-md items-end justify-around px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2"
-      >
-        {/* Home tab */}
+    <nav className="fixed inset-x-0 bottom-0 z-20 bg-surface-container">
+      <div className="relative mx-auto flex max-w-md items-end justify-around px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-3">
         <TabLink {...tabs[0]} />
 
-        {/* Center FAB: new task */}
+        {/* M3 FAB: 56dp, 16dp radius */}
         <Link
           href="/new-task"
           aria-label={t('newTask')}
-          className={`-mt-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-2xl font-light transition active:scale-90 ${
-            pathname.startsWith('/new-task')
-              ? 'bg-neutral-200 text-neutral-900'
-              : 'bg-tuki-500 text-white'
-          }`}
+          className="-mt-7 flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary text-3xl font-light text-on-primary shadow-lg shadow-black/30 transition active:scale-90"
         >
-          +
+          <span className="-mt-1">+</span>
         </Link>
 
         <TabLink {...tabs[1]} />
@@ -54,14 +51,22 @@ function TabLink({
   active: boolean;
 }) {
   return (
-    <Link
-      href={href as any}
-      className={`flex w-16 flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] leading-tight transition ${
-        active ? 'text-tuki-400' : 'text-neutral-500'
-      }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span className="max-w-full truncate">{label}</span>
+    <Link href={href as any} className="flex w-[4.5rem] flex-col items-center gap-1 py-1">
+      {/* M3 pill indicator: 64x32dp, secondary-container when active */}
+      <span
+        className={`flex h-8 w-16 items-center justify-center rounded-full text-xl transition-colors ${
+          active ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant'
+        }`}
+      >
+        {icon}
+      </span>
+      <span
+        className={`max-w-full truncate text-[11px] leading-none ${
+          active ? 'font-semibold text-on-surface' : 'text-on-surface-variant'
+        }`}
+      >
+        {label}
+      </span>
     </Link>
   );
 }

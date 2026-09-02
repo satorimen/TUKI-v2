@@ -134,10 +134,10 @@ export default function NewTaskPage() {
         <main className="flex min-h-[75dvh] flex-col items-center justify-center px-6 text-center">
           <span className="mb-4 text-4xl">✅</span>
           <h1 className="text-lg font-bold">{tc('publishSuccess')}</h1>
-          <p className="mt-2 font-mono text-xs text-neutral-600">{published}</p>
+          <p className="mt-2 font-mono text-xs text-on-surface-variant/70">{published}</p>
           <Link
             href="/my-tasks"
-            className="mt-8 w-full rounded-2xl bg-tuki-500 py-3.5 font-semibold text-white transition active:scale-[0.98]"
+            className="mt-8 w-full rounded-full bg-primary py-3.5 font-semibold text-white transition active:scale-[0.98]"
           >
             {tn('myTasks')}
           </Link>
@@ -153,7 +153,7 @@ export default function NewTaskPage() {
         <Header />
         <main className="flex min-h-[80dvh] flex-col px-5 pt-8">
           <h1 className="text-2xl font-bold">{tf('step1')}</h1>
-          <p className="mt-2 text-sm text-neutral-500">{tf('step1Hint')}</p>
+          <p className="mt-2 text-sm text-on-surface-variant">{tf('step1Hint')}</p>
 
           <textarea
             value={text}
@@ -161,14 +161,14 @@ export default function NewTaskPage() {
             placeholder={tf('example')}
             rows={5}
             autoFocus
-            className="mt-6 w-full resize-none rounded-2xl bg-[#161616] p-4 text-[15px] leading-relaxed outline-none ring-tuki-500/50 placeholder:text-neutral-600 focus:ring-2"
+            className="mt-6 w-full resize-none rounded-xs border border-outline bg-transparent p-4 text-[15px] leading-relaxed outline-none placeholder:text-on-surface-variant/70 "
           />
 
           <div className="mt-auto pb-4 pt-6">
             <button
               onClick={parse}
               disabled={loading || text.trim().length === 0}
-              className="w-full rounded-2xl bg-tuki-500 py-4 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
+              className="w-full rounded-full bg-primary py-4 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
             >
               {loading ? tf('sending') : `${tf('next')} →`}
             </button>
@@ -186,29 +186,29 @@ export default function NewTaskPage() {
         <h1 className="text-xl font-bold">{tf('step2')}</h1>
         <button
           onClick={() => setStep('describe')}
-          className="mt-1 text-xs text-neutral-500 underline underline-offset-4"
+          className="mt-1 text-xs text-on-surface-variant underline underline-offset-4"
         >
           ← {tf('backToEdit')}
         </button>
 
         {/* Work types (parsed, read-only) */}
         <section className="mt-6">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-on-surface-variant">
             {tf('workTypes')}
           </p>
           <div className="flex flex-wrap gap-2">
             {draft!.subtasks.map((s, i) => (
               <span
                 key={i}
-                className="rounded-full bg-[#1c1c1c] px-3.5 py-2 text-sm font-medium"
+                className="rounded-full bg-surface-container-low px-3.5 py-2 text-sm font-medium"
               >
                 {s.title}
-                <span className="ms-2 text-neutral-500">{categoryName(s.category, locale)}</span>
+                <span className="ms-2 text-on-surface-variant">{categoryName(s.category, locale)}</span>
               </span>
             ))}
           </div>
           {draft!.area_sqm != null && (
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className="mt-2 text-sm text-on-surface-variant">
               {t('area')}: {draft!.area_sqm} m²
             </p>
           )}
@@ -216,13 +216,13 @@ export default function NewTaskPage() {
 
         {/* City */}
         <section className="mt-6">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-on-surface-variant">
             📍 {t('city')}
           </p>
           <select
             value={draft!.cityId ?? ''}
             onChange={(e) => patchDraft({ cityId: e.target.value || null })}
-            className="w-full rounded-2xl bg-[#161616] px-4 py-3.5 text-[15px] outline-none ring-tuki-500/50 focus:ring-2"
+            className="w-full rounded-xs border border-outline bg-transparent px-4 py-3.5 text-[15px] outline-none "
           >
             <option value="">—</option>
             {citiesByCluster.map(({ cluster, cities }) => (
@@ -239,7 +239,7 @@ export default function NewTaskPage() {
 
         {/* Budget */}
         <section className="mt-5">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-on-surface-variant">
             💰 {tf('budgetTo')}
           </p>
           <input
@@ -252,13 +252,13 @@ export default function NewTaskPage() {
             }}
             dir="ltr"
             placeholder="1500"
-            className="w-full rounded-2xl bg-[#161616] px-4 py-3.5 text-[15px] outline-none ring-tuki-500/50 placeholder:text-neutral-600 focus:ring-2"
+            className="w-full rounded-xs border border-outline bg-transparent px-4 py-3.5 text-[15px] outline-none placeholder:text-on-surface-variant/70 "
           />
         </section>
 
         {/* Timeline */}
         <section className="mt-5">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-on-surface-variant">
             📅 {tf('when')}
           </p>
           <input
@@ -268,7 +268,7 @@ export default function NewTaskPage() {
               patchDraft({ timeline: e.target.value || null });
             }}
             placeholder={locale === 'he' ? 'בשבוע הבא' : locale === 'ru' ? 'на следующей неделе' : 'next week'}
-            className="w-full rounded-2xl bg-[#161616] px-4 py-3.5 text-[15px] outline-none ring-tuki-500/50 placeholder:text-neutral-600 focus:ring-2"
+            className="w-full rounded-xs border border-outline bg-transparent px-4 py-3.5 text-[15px] outline-none placeholder:text-on-surface-variant/70 "
           />
         </section>
 
@@ -276,20 +276,20 @@ export default function NewTaskPage() {
         <div className="mt-8">
           {needAuth ? (
             <div className="space-y-2">
-              <p className="text-center text-xs text-neutral-500">{tc('loginToPublish')}</p>
+              <p className="text-center text-xs text-on-surface-variant">{tc('loginToPublish')}</p>
               <AuthForm onAuthed={publishNow} />
             </div>
           ) : (
             <button
               onClick={onPublish}
               disabled={!canPublish || publishing}
-              className="w-full rounded-2xl bg-tuki-500 py-4 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
+              className="w-full rounded-full bg-primary py-4 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
             >
               {publishing ? tf('sending') : t('publish')}
             </button>
           )}
           {!canPublish && !needAuth && (
-            <p className="mt-3 text-center text-xs text-neutral-600">{tc('needCityBudget')}</p>
+            <p className="mt-3 text-center text-xs text-on-surface-variant/70">{tc('needCityBudget')}</p>
           )}
         </div>
       </main>

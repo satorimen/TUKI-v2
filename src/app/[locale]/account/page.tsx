@@ -64,7 +64,7 @@ export default function AccountPage() {
         <Header />
         <main className="px-5 py-10">
           <h1 className="mb-1 text-xl font-bold">{t('title')}</h1>
-          <p className="mb-6 text-sm text-neutral-500">{t('loginSubtitle')}</p>
+          <p className="mb-6 text-sm text-on-surface-variant">{t('loginSubtitle')}</p>
           <AuthForm onAuthed={load} />
         </main>
       </>
@@ -75,7 +75,7 @@ export default function AccountPage() {
     return (
       <>
         <Header />
-        <main className="px-5 py-10 text-neutral-500">…</main>
+        <main className="px-5 py-10 text-on-surface-variant">…</main>
       </>
     );
   }
@@ -89,19 +89,19 @@ export default function AccountPage() {
 
         <section className="mt-6 space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-on-surface-variant">
               {t('name')}
             </label>
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="—"
-              className="w-full rounded-2xl bg-[#161616] px-4 py-3.5 text-[15px] outline-none ring-tuki-500/50 focus:ring-2"
+              className="w-full rounded-xs border border-outline bg-transparent px-4 py-3.5 text-[15px] outline-none "
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-on-surface-variant">
               {t('whatsapp')}
             </label>
             <input
@@ -109,14 +109,14 @@ export default function AccountPage() {
               onChange={(e) => setWhatsapp(e.target.value)}
               placeholder="050-1234567"
               dir="ltr"
-              className="w-full rounded-2xl bg-[#161616] px-4 py-3.5 text-[15px] outline-none ring-tuki-500/50 placeholder:text-neutral-600 focus:ring-2"
+              className="w-full rounded-xs border border-outline bg-transparent px-4 py-3.5 text-[15px] outline-none placeholder:text-on-surface-variant/70 "
             />
           </div>
 
           <button
             onClick={save}
             disabled={saving}
-            className="w-full rounded-2xl bg-tuki-500 py-3.5 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
+            className="w-full rounded-full bg-primary py-3.5 font-semibold text-white transition active:scale-[0.98] disabled:opacity-40"
           >
             {saved ? `✓ ${t('saved')}` : t('save')}
           </button>
@@ -125,7 +125,7 @@ export default function AccountPage() {
         {profile.role === 'master' && (
           <Link
             href="/master"
-            className="mt-6 block rounded-2xl border border-neutral-800 px-4 py-3.5 text-sm font-medium"
+            className="mt-6 block rounded-full border border-outline px-4 py-3.5 text-sm font-medium"
           >
             👷 {t('masterCabinet')} →
           </Link>
@@ -133,12 +133,12 @@ export default function AccountPage() {
 
         <button
           onClick={logout}
-          className="mt-10 w-full rounded-2xl border border-neutral-800 py-3.5 text-sm font-medium text-neutral-400 transition active:scale-[0.98]"
+          className="mt-10 w-full rounded-full border border-outline py-3.5 text-sm font-medium text-on-surface-variant transition active:scale-[0.98]"
         >
           {t('logout')}
         </button>
 
-        <p className="mt-3 text-center font-mono text-[11px] text-neutral-600">
+        <p className="mt-3 text-center font-mono text-[11px] text-on-surface-variant/70">
           {profile.email}
         </p>
       </main>

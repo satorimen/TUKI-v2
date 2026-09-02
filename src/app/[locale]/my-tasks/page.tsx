@@ -76,17 +76,19 @@ export default function MyTasksPage() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition active:scale-95 ${
+              className={`flex h-8 shrink-0 items-center gap-1.5 rounded-sm border px-4 text-[13px] font-medium transition active:scale-95 ${
                 filter === f
-                  ? 'bg-tuki-500 text-white'
-                  : 'bg-[#1c1c1c] text-neutral-400'
+                  ? 'border-transparent bg-secondary-container text-on-secondary-container'
+                  : 'border-outline text-on-surface-variant'
               }`}
             >
               {tf(f)}
               {counts[f] > 0 && (
                 <span
                   className={`rounded-full px-1.5 text-[11px] ${
-                    filter === f ? 'bg-white/20' : 'bg-neutral-700 text-neutral-300'
+                    filter === f
+                      ? 'bg-on-secondary-container/20 text-on-secondary-container'
+                      : 'bg-surface-container-highest text-on-surface-variant'
                   }`}
                 >
                   {counts[f]}
@@ -96,14 +98,14 @@ export default function MyTasksPage() {
           ))}
         </div>
 
-        {state.status === 'loading' && <p className="mt-8 text-neutral-500">…</p>}
+        {state.status === 'loading' && <p className="mt-8 text-on-surface-variant">…</p>}
 
         {state.status === 'ok' && tasks.length === 0 && (
-          <div className="mt-8 rounded-2xl bg-[#1c1c1c] p-8 text-center">
-            <p className="text-sm text-neutral-500">{t('myTasksEmpty')}</p>
+          <div className="mt-8 rounded-2xl bg-surface-container-low p-8 text-center">
+            <p className="text-sm text-on-surface-variant">{t('myTasksEmpty')}</p>
             <Link
               href="/new-task"
-              className="mt-4 inline-block rounded-xl bg-tuki-500 px-6 py-2.5 text-sm font-semibold text-white"
+              className="mt-4 inline-block rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white"
             >
               + {t('newTask')}
             </Link>
@@ -115,33 +117,33 @@ export default function MyTasksPage() {
             <Link
               key={task.id}
               href={`/task/${task.id}` as any}
-              className="block rounded-2xl bg-[#1c1c1c] p-4 transition active:scale-[0.98]"
+              className="block rounded-2xl bg-surface-container-low p-4 transition active:scale-[0.98]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate font-semibold">
                     {task.subtasks[0]?.title ?? '—'}
                     {task.subtasks.length > 1 && (
-                      <span className="text-neutral-500"> +{task.subtasks.length - 1}</span>
+                      <span className="text-on-surface-variant"> +{task.subtasks.length - 1}</span>
                     )}
                   </p>
-                  <p className="mt-1 text-xs text-neutral-500">
+                  <p className="mt-1 text-xs text-on-surface-variant">
                     📍 {cityName(task.cityId, locale)}
                     {task.budgetMax != null && ` · ≤ ${task.budgetMax} ₪`}
                     {task.status === 'published' && task.selectedBidId === null && (
-                      <span className="text-tuki-500"> · {ta('bids')}: —</span>
+                      <span className="text-primary"> · {ta('bids')}: —</span>
                     )}
                   </p>
                 </div>
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${
                     task.status === 'published'
-                      ? 'bg-tuki-500/15 text-tuki-400'
+                      ? 'bg-primary/15 text-primary'
                       : task.status === 'assigned'
                         ? 'bg-amber-500/15 text-amber-500'
                         : task.status === 'completed'
                           ? 'bg-green-500/15 text-green-400'
-                          : 'bg-neutral-800 text-neutral-500'
+                          : 'bg-secondary-container text-on-surface-variant'
                   }`}
                 >
                   {t(`status_${task.status}` as any)}

@@ -31,8 +31,8 @@ export default function TaskCard({ draft }: { draft: TaskDraft }) {
   ];
 
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
-      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
+    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-outline-variant dark:bg-neutral-900">
+      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
         {t('taskCard')}
       </h3>
 
@@ -41,18 +41,18 @@ export default function TaskCard({ draft }: { draft: TaskDraft }) {
           {draft.subtasks.map((subtask, i) => (
             <li
               key={i}
-              className="flex items-start gap-3 rounded-xl bg-neutral-50 p-3 dark:bg-neutral-800"
+              className="flex items-start gap-3 rounded-xl bg-surface-container p-3 dark:bg-secondary-container"
             >
               <span className="text-xl leading-none">
                 {categoryName(subtask.category, locale) ? '✅' : ''}
               </span>
               <div className="min-w-0">
                 <p className="font-medium">{subtask.title}</p>
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-on-surface-variant">
                   {categoryName(subtask.category, locale)}
                 </p>
                 {subtask.details && (
-                  <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                  <p className="mt-1 text-sm text-on-surface-variant/70 dark:text-on-surface-variant">
                     {subtask.details}
                   </p>
                 )}
@@ -67,7 +67,7 @@ export default function TaskCard({ draft }: { draft: TaskDraft }) {
           (row) =>
             row.value && (
               <div key={row.label}>
-                <dt className="text-neutral-500">{row.label}</dt>
+                <dt className="text-on-surface-variant">{row.label}</dt>
                 <dd className="font-medium">{row.value}</dd>
               </div>
             )

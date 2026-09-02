@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  /* Dark monochrome theme (per approved design reference) */
-  --background: #0d0d0d;
-  --foreground: #eaeaea;
+  /* Material Design 3 dark scheme (orange source) — mirrors tailwind tokens */
+  --md-sys-color-surface: #17120e;
+  --md-sys-color-on-surface: #ece0d8;
+  --md-sys-color-primary: #ffb68f;
 }
 
 html {
@@ -13,7 +14,17 @@ html {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-heebo), system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  font-family: var(--font-heebo), Roboto, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* M3 state layer: pressed feedback for interactive elements */
+.m3-pressable {
+  position: relative;
+  transition: background-color 150ms ease;
+}
+.m3-pressable:active {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
 }

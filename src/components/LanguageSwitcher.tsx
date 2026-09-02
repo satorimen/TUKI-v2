@@ -13,13 +13,13 @@ export default function LanguageSwitcher() {
   const SHORT: Record<Locale, string> = { he: 'עב', ru: 'Рус', en: 'En' };
 
   return (
-    <div className="flex items-center gap-0.5 rounded-full bg-neutral-800/80 p-0.5 text-xs font-medium">
+    <div className="flex items-center gap-0.5 rounded-full bg-secondary-container p-0.5 text-xs font-medium">
       {locales.map((l) => (
         <button
           key={l}
           onClick={() => router.replace(pathname, { locale: l })}
           className={`rounded-full px-2.5 py-1 transition ${
-            l === locale ? 'bg-tuki-500 text-white' : 'text-neutral-400'
+            l === locale ? 'bg-primary text-on-primary' : 'text-on-surface-variant'
           }`}
         >
           {SHORT[l]}

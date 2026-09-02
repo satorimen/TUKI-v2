@@ -79,7 +79,7 @@ export default async function LocaleLayout({
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider messages={messages}>
           {/* mobile app shell: phone column on any screen */}
-          <div className="mx-auto flex min-h-dvh max-w-md flex-col border-neutral-800/60 sm:border-x">
+          <div className="mx-auto flex min-h-dvh max-w-md flex-col border-outline-variant sm:border-x">
             <div className="flex-1 pb-24">{children}</div>
           </div>
           <BottomNav />
