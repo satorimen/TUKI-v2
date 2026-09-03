@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { ChevronRight, Check, MapPin, Search, X } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import { CATEGORIES, type CategoryId } from '@/lib/tasks/categories';
 import { CITIES } from '@/lib/geo/cities';
@@ -153,8 +154,8 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
   if (saved) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-on-primary">
-          ✓
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary">
+          <Check className="h-8 w-8" strokeWidth={3} />
         </div>
         <p className="text-lg font-semibold text-on-surface">{t('saved')}</p>
       </div>
@@ -213,20 +214,27 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
         />
 
         <div className="mb-3 flex items-center gap-2">
-          <input
-            type="search"
-            inputMode="search"
-            value={citySearch}
-            onChange={(e) => setCitySearch(e.target.value)}
-            placeholder={t('searchCity')}
-            className="min-w-0 flex-1 rounded-xl border border-outline/40 bg-surface-container px-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
-          />
+          <div className="relative min-w-0 flex-1">
+            <Search
+              className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant"
+              aria-hidden
+            />
+            <input
+              type="search"
+              inputMode="search"
+              value={citySearch}
+              onChange={(e) => setCitySearch(e.target.value)}
+              placeholder={t('searchCity')}
+              className="w-full rounded-xl border border-outline/40 bg-surface-container ps-9 pe-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
+            />
+          </div>
           {cities.size > 0 && (
             <button
               type="button"
               onClick={() => setCities(new Set())}
-              className="shrink-0 rounded-xl px-3 py-2.5 text-sm font-medium text-on-surface-variant active:scale-95"
+              className="flex shrink-0 items-center gap-1 rounded-xl px-3 py-2.5 text-sm font-medium text-on-surface-variant active:scale-95"
             >
+              <X className="h-4 w-4" aria-hidden />
               {t('clearCities')}
             </button>
           )}
@@ -243,17 +251,17 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
           }`}
         >
           <span className="flex items-center gap-2">
-            <span aria-hidden>🇮🇱</span>
+            <MapPin className="h-4 w-4 text-primary" aria-hidden />
             {t('wholeCountry')}
           </span>
           <span
-            className={`flex h-5 w-5 items-center justify-center rounded-full border text-xs ${
+            className={`flex h-5 w-5 items-center justify-center rounded-full border ${
               allSelected
                 ? 'border-primary bg-primary text-on-primary'
                 : 'border-outline/60'
             }`}
           >
-            {allSelected ? '✓' : ''}
+            {allSelected && <Check className="h-3 w-3" strokeWidth={3} />}
           </span>
         </button>
 
@@ -292,14 +300,12 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
                       className="flex flex-1 items-center gap-2 px-4 py-3 text-start"
                       aria-expanded={open}
                     >
-                      <span
-                        className={`text-xs text-on-surface-variant transition-transform ${
+                      <ChevronRight
+                        className={`h-4 w-4 shrink-0 text-on-surface-variant transition-transform ${
                           open ? 'rotate-90' : ''
                         }`}
                         aria-hidden
-                      >
-                        ▶
-                      </span>
+                      />
                       <span className="text-sm font-semibold text-on-surface">
                         {cluster.name[locale]}
                       </span>
