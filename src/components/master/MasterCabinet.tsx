@@ -71,6 +71,10 @@ export default function MasterCabinet() {
           workCities: data.master.workCities ?? [],
           experienceYears: data.master.experienceYears ?? null,
           bio: data.master.bio ?? "",
+          employmentType: data.master.employmentType ?? null,
+          travelRadiusKm: data.master.travelRadiusKm ?? null,
+          languages: data.master.languages ?? [],
+          hourlyRate: data.master.hourlyRate ?? null,
         }}
         onSaved={() => {
           setEdit(false);

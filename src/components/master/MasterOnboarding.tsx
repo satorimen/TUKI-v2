@@ -9,6 +9,8 @@ import { CITIES } from '@/lib/geo/cities';
 import { CLUSTERS, type ClusterId } from '@/lib/geo/clusters';
 import type { Language } from '@/lib/db/types';
 
+type EmploymentType = 'individual' | 'company' | 'team';
+
 interface Props {
   initial?: {
     fullName?: string | null;
@@ -17,11 +19,18 @@ interface Props {
     workCities?: string[];
     experienceYears?: number | null;
     bio?: string | null;
+    employmentType?: EmploymentType | null;
+    travelRadiusKm?: number | null;
+    languages?: string[];
+    hourlyRate?: number | null;
   };
   onSaved?: () => void;
 }
 
 const ALL_CITY_IDS = CITIES.map((c) => c.id);
+const EMPLOYMENT_TYPES: EmploymentType[] = ['individual', 'team', 'company'];
+const LANGUAGE_OPTIONS = ['he', 'ru', 'en', 'ar', 'am', 'fr', 'es'] as const;
+const TRAVEL_RADIUS_OPTIONS = [10, 25, 50, 100] as const;
 
 export default function MasterOnboarding({ initial, onSaved }: Props) {
   const t = useTranslations('master');
@@ -39,6 +48,18 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
     initial?.experienceYears != null ? String(initial.experienceYears) : ''
   );
   const [bio, setBio] = useState(initial?.bio ?? '');
+  const [employmentType, setEmploymentType] = useState<EmploymentType | null>(
+    initial?.employmentType ?? null
+  );
+  const [travelRadius, setTravelRadius] = useState<number | null>(
+    initial?.travelRadiusKm ?? null
+  );
+  const [languages, setLanguages] = useState<Set<string>>(
+    new Set(initial?.languages ?? [])
+  );
+  const [hourlyRate, setHourlyRate] = useState<string>(
+    initial?.hourlyRate != null ? String(initial.hourlyRate) : ''
+  );
 
   const [citySearch, setCitySearch] = useState('');
   const [openClusters, setOpenClusters] = useState<Set<ClusterId>>(new Set());
@@ -130,11 +151,15 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fullName: fullName.trim() || null,
-          whatsappNumber: whatsapp.trim() || null,
+          whatsapp: whatsapp.trim() || undefined,
           specializations: [...specs],
           workCities: [...cities],
-          experienceYears: experience ? Number(experience) : null,
+          experienceYears: experience ? Number(experience) : undefined,
           bio: bio.trim() || null,
+          employmentType: employmentType ?? undefined,
+          travelRadiusKm: travelRadius ?? undefined,
+          languages: [...languages],
+          hourlyRate: hourlyRate ? Number(hourlyRate) : undefined,
         }),
       });
       if (!res.ok) throw new Error('save failed');
@@ -344,6 +369,117 @@ export default function MasterOnboarding({ initial, onSaved }: Props) {
             })}
           </div>
         )}
+      </section>
+
+      {/* ── Work preferences ────────────────────────── */}
+      <section className="mb-6">
+        <SectionHeader title={t('preferencesSection')} hint={t('preferencesHint')} />
+        <div className="flex flex-col gap-4">
+          {/* employment type */}
+          <div>
+            <span className="mb-2 block text-xs font-medium text-on-surface-variant">
+              {t('employmentType')}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {EMPLOYMENT_TYPES.map((et) => {
+                const active = employmentType === et;
+                return (
+                  <button
+                    key={et}
+                    type="button"
+                    onClick={() => setEmploymentType(active ? null : et)}
+                    aria-pressed={active}
+                    className={`rounded-full border px-4 py-2 text-sm transition ${
+                      active
+                        ? 'border-primary bg-primary text-on-primary'
+                        : 'border-outline/40 bg-surface-container text-on-surface active:scale-95'
+                    }`}
+                  >
+                    {t(`employment_${et}`)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* languages */}
+          <div>
+            <span className="mb-2 block text-xs font-medium text-on-surface-variant">
+              {t('languages')}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {LANGUAGE_OPTIONS.map((lang) => {
+                const active = languages.has(lang);
+                return (
+                  <button
+                    key={lang}
+                    type="button"
+                    onClick={() =>
+                      setLanguages((prev) => {
+                        const next = new Set(prev);
+                        next.has(lang) ? next.delete(lang) : next.add(lang);
+                        return next;
+                      })
+                    }
+                    aria-pressed={active}
+                    className={`rounded-full border px-4 py-2 text-sm transition ${
+                      active
+                        ? 'border-primary bg-primary text-on-primary'
+                        : 'border-outline/40 bg-surface-container text-on-surface active:scale-95'
+                    }`}
+                  >
+                    {t(`lang_${lang}`)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* travel radius */}
+          <div>
+            <span className="mb-2 block text-xs font-medium text-on-surface-variant">
+              {t('travelRadius')}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {TRAVEL_RADIUS_OPTIONS.map((km) => {
+                const active = travelRadius === km;
+                return (
+                  <button
+                    key={km}
+                    type="button"
+                    onClick={() => setTravelRadius(active ? null : km)}
+                    aria-pressed={active}
+                    className={`rounded-full border px-4 py-2 text-sm transition ${
+                      active
+                        ? 'border-primary bg-primary text-on-primary'
+                        : 'border-outline/40 bg-surface-container text-on-surface active:scale-95'
+                    }`}
+                  >
+                    {t('radiusKm', { km })}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* hourly rate */}
+          <Field label={t('hourlyRate')} hint={t('hourlyRateHint')}>
+            <div className="relative">
+              <input
+                value={hourlyRate}
+                onChange={(e) =>
+                  setHourlyRate(e.target.value.replace(/\D/g, '').slice(0, 5))
+                }
+                inputMode="numeric"
+                placeholder="150"
+                className="w-full rounded-xl border border-outline/40 bg-surface-container ps-4 pe-12 py-2.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant focus:border-primary"
+              />
+              <span className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
+                ₪/h
+              </span>
+            </div>
+          </Field>
+        </div>
       </section>
 
       {/* ── Contact / about ─────────────────────────── */}

@@ -39,11 +39,28 @@ export interface DbRepository {
       workCities: string[];
       experienceYears?: number;
       bio?: string;
+      employmentType?: MasterProfile['employmentType'];
+      travelRadiusKm?: number | null;
+      languages?: string[];
+      hourlyRate?: number | null;
     }
   ): Promise<MasterProfile>;
   updateMaster(
     id: string,
-    patch: Partial<Pick<MasterProfile, 'specializations' | 'workCities' | 'experienceYears' | 'bio' | 'isActive'>>
+    patch: Partial<
+      Pick<
+        MasterProfile,
+        | 'specializations'
+        | 'workCities'
+        | 'experienceYears'
+        | 'bio'
+        | 'employmentType'
+        | 'travelRadiusKm'
+        | 'languages'
+        | 'hourlyRate'
+        | 'isActive'
+      >
+    >
   ): Promise<MasterProfile>;
   /** For matching (M4): active masters in given cities with any of the categories */
   findMasters(filter: {

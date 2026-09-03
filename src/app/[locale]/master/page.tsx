@@ -62,6 +62,10 @@ export default async function MasterPage({
               whatsappNumber: profile.whatsappNumber,
               specializations: [],
               workCities: [],
+              employmentType: null,
+              travelRadiusKm: null,
+              languages: [],
+              hourlyRate: null,
             }}
           />
         </main>

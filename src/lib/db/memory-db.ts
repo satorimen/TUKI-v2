@@ -100,7 +100,16 @@ export class MemoryDb implements DbRepository {
 
   async createMaster(
     userId: string,
-    input: { specializations: string[]; workCities: string[]; experienceYears?: number; bio?: string }
+    input: {
+      specializations: string[];
+      workCities: string[];
+      experienceYears?: number;
+      bio?: string;
+      employmentType?: MasterProfile['employmentType'];
+      travelRadiusKm?: number | null;
+      languages?: string[];
+      hourlyRate?: number | null;
+    }
   ): Promise<MasterProfile> {
     const existing = await this.getMasterByUserId(userId);
     if (existing) {
@@ -109,6 +118,10 @@ export class MemoryDb implements DbRepository {
         workCities: input.workCities,
         experienceYears: input.experienceYears ?? null,
         bio: input.bio ?? null,
+        employmentType: input.employmentType ?? null,
+        travelRadiusKm: input.travelRadiusKm ?? null,
+        languages: input.languages ?? [],
+        hourlyRate: input.hourlyRate ?? null,
       });
     }
     const master: MasterProfile = {
@@ -119,6 +132,10 @@ export class MemoryDb implements DbRepository {
       experienceYears: input.experienceYears ?? null,
       bio: input.bio ?? null,
       portfolioUrls: [],
+      employmentType: input.employmentType ?? null,
+      travelRadiusKm: input.travelRadiusKm ?? null,
+      languages: input.languages ?? [],
+      hourlyRate: input.hourlyRate ?? null,
       isActive: true,
       rating: 0,
       reviewsCount: 0,

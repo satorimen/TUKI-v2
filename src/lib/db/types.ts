@@ -22,6 +22,8 @@ export interface Profile {
   createdAt: string;
 }
 
+export type EmploymentType = 'individual' | 'company' | 'team';
+
 export interface MasterProfile {
   id: string;
   userId: string;
@@ -31,6 +33,14 @@ export interface MasterProfile {
   experienceYears: number | null;
   bio: string | null;
   portfolioUrls: string[];
+  /** how the master operates: solo, registered company, or a crew */
+  employmentType: EmploymentType | null;
+  /** how far the master is willing to travel, in km (null = unspecified) */
+  travelRadiusKm: number | null;
+  /** language codes the master speaks: 'he' | 'ru' | 'en' | 'ar' | 'am' | ... */
+  languages: string[];
+  /** approximate hourly rate in ILS (null = negotiable) */
+  hourlyRate: number | null;
   isActive: boolean;
   rating: number;
   reviewsCount: number;

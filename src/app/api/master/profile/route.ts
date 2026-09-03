@@ -27,6 +27,10 @@ export async function POST(request: Request) {
       bio?: string;
       fullName?: string;
       whatsapp?: string;
+      employmentType?: string;
+      travelRadiusKm?: number;
+      languages?: string[];
+      hourlyRate?: number;
       /** standalone toggle: just flip active status */
       isActive?: boolean;
     };
@@ -71,6 +75,28 @@ export async function POST(request: Request) {
       ...(whatsappNumber ? { whatsappNumber } : {}),
     });
 
+    const employmentType =
+      body.employmentType === 'individual' ||
+      body.employmentType === 'company' ||
+      body.employmentType === 'team'
+        ? body.employmentType
+        : null;
+
+    const travelRadiusKm =
+      typeof body.travelRadiusKm === 'number' && body.travelRadiusKm >= 0
+        ? Math.min(Math.round(body.travelRadiusKm), 500)
+        : null;
+
+    const ALLOWED_LANGUAGES = ['he', 'ru', 'en', 'ar', 'am', 'fr', 'es'];
+    const languages = Array.isArray(body.languages)
+      ? [...new Set(body.languages.filter((l) => ALLOWED_LANGUAGES.includes(l)))]
+      : [];
+
+    const hourlyRate =
+      typeof body.hourlyRate === 'number' && body.hourlyRate >= 0
+        ? Math.min(Math.round(body.hourlyRate), 100000)
+        : null;
+
     const master = await db.createMaster(profileId, {
       specializations,
       workCities,
@@ -79,6 +105,10 @@ export async function POST(request: Request) {
           ? Math.min(body.experienceYears, 70)
           : undefined,
       bio: body.bio?.slice(0, 1000),
+      employmentType,
+      travelRadiusKm,
+      languages,
+      hourlyRate,
     });
 
     return NextResponse.json({ master });

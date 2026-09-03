@@ -56,6 +56,10 @@ function mapMaster(row: Row): MasterProfile {
     experienceYears: row.experience_years,
     bio: row.bio,
     portfolioUrls: row.portfolio_urls ?? [],
+    employmentType: row.employment_type ?? null,
+    travelRadiusKm: row.travel_radius_km ?? null,
+    languages: row.languages ?? [],
+    hourlyRate: row.hourly_rate ?? null,
     isActive: row.is_active,
     rating: Number(row.rating ?? 0),
     reviewsCount: row.reviews_count ?? 0,
@@ -202,7 +206,16 @@ export class SupabaseDb implements DbRepository {
 
   async createMaster(
     userId: string,
-    input: { specializations: string[]; workCities: string[]; experienceYears?: number; bio?: string }
+    input: {
+      specializations: string[];
+      workCities: string[];
+      experienceYears?: number;
+      bio?: string;
+      employmentType?: MasterProfile['employmentType'];
+      travelRadiusKm?: number | null;
+      languages?: string[];
+      hourlyRate?: number | null;
+    }
   ): Promise<MasterProfile> {
     const existing = await this.getMasterByUserId(userId);
     if (existing) {
@@ -211,6 +224,10 @@ export class SupabaseDb implements DbRepository {
         workCities: input.workCities,
         experienceYears: input.experienceYears ?? null,
         bio: input.bio ?? null,
+        employmentType: input.employmentType ?? null,
+        travelRadiusKm: input.travelRadiusKm ?? null,
+        languages: input.languages ?? [],
+        hourlyRate: input.hourlyRate ?? null,
       });
     }
     const { data, error } = await this.db
@@ -221,6 +238,10 @@ export class SupabaseDb implements DbRepository {
         work_cities: input.workCities,
         experience_years: input.experienceYears ?? null,
         bio: input.bio ?? null,
+        employment_type: input.employmentType ?? null,
+        travel_radius_km: input.travelRadiusKm ?? null,
+        languages: input.languages ?? [],
+        hourly_rate: input.hourlyRate ?? null,
       })
       .select()
       .single();
@@ -234,6 +255,10 @@ export class SupabaseDb implements DbRepository {
     if (patch.workCities !== undefined) row.work_cities = patch.workCities;
     if (patch.experienceYears !== undefined) row.experience_years = patch.experienceYears;
     if (patch.bio !== undefined) row.bio = patch.bio;
+    if (patch.employmentType !== undefined) row.employment_type = patch.employmentType;
+    if (patch.travelRadiusKm !== undefined) row.travel_radius_km = patch.travelRadiusKm;
+    if (patch.languages !== undefined) row.languages = patch.languages;
+    if (patch.hourlyRate !== undefined) row.hourly_rate = patch.hourlyRate;
     if (patch.isActive !== undefined) row.is_active = patch.isActive;
     const { data, error } = await this.db
       .from('masters')
