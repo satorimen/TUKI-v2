@@ -89,6 +89,10 @@ function mapTask(row: Row): Task {
     assignedAt: row.assigned_at,
     completedAt: row.completed_at,
     createdAt: row.created_at,
+    matchedMasterIds: row.matched_master_ids ?? [],
+    waveSize: row.wave_size ?? 5,
+    invitedCount: row.invited_count ?? 0,
+    waveLastAdvancedAt: row.wave_last_advanced_at ?? null,
   };
 }
 
@@ -303,11 +307,38 @@ export class SupabaseDb implements DbRepository {
         work_details: input.workDetails,
         raw_input: input.rawInput,
         photo_urls: input.photoUrls ?? [],
+        matched_master_ids: [],
+        wave_size: 5,
+        invited_count: 0,
       })
       .select()
       .single();
     if (error) throw error;
     return mapTask(data);
+  }
+
+  async updateTaskWave(
+    id: string,
+    patch: {
+      matchedMasterIds?: string[];
+      waveSize?: number;
+      invitedCount?: number;
+      waveLastAdvancedAt?: string | null;
+    },
+  ): Promise<Task | null> {
+    const row: Row = {};
+    if (patch.matchedMasterIds !== undefined) row.matched_master_ids = patch.matchedMasterIds;
+    if (patch.waveSize !== undefined) row.wave_size = patch.waveSize;
+    if (patch.invitedCount !== undefined) row.invited_count = patch.invitedCount;
+    if (patch.waveLastAdvancedAt !== undefined) row.wave_last_advanced_at = patch.waveLastAdvancedAt;
+    const { data, error } = await this.db
+      .from('tasks')
+      .update(row)
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return data ? mapTask(data) : null;
   }
 
   async getTask(id: string) {

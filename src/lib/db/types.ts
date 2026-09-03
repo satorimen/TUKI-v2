@@ -142,5 +142,9 @@ export function taskFromDraft(
     workDetails: draft.work_details,
     rawInput,
     photoUrls: [],
+    matchedMasterIds: [],
+    waveSize: 5,
+    invitedCount: 0,
+    waveLastAdvancedAt: null,
   };
 }

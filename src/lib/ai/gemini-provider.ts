@@ -42,7 +42,7 @@ const draftSchema = z.object({
   subtasks: z
     .array(
       z.object({
-        category: z.enum(CATEGORY_IDS as [string, ...string[]]),
+        category: z.enum([...CATEGORY_IDS] as [string, ...string[]]),
         title: z.string(),
         details: z.string().nullable().optional(),
       })

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getSessionProfileId } from '@/lib/auth/session';
 import { feedForMaster } from '@/lib/matching/matcher';
+import { advanceDueWaves } from '@/lib/matching/waves';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,10 @@ export async function GET(request: Request) {
     const { db } = getDb();
     const master = await db.getMasterByUserId(profileId);
     if (!master) return NextResponse.json({ error: 'master_profile_required' }, { status: 403 });
+
+    // Lazily advance any wave whose window has elapsed before reading the feed,
+    // so a master polling the feed also drives wave progression for the platform.
+    await advanceDueWaves(db);
 
     const published = await db.listPublishedTasks();
     const feed = feedForMaster(master, published);
