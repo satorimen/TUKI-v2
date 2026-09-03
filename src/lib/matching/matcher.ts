@@ -73,15 +73,19 @@ function dedupe(a: MasterProfile[], b: MasterProfile[]): MasterProfile[] {
 }
 
 /**
- * Feed for a specific master: published tasks matching their
- * specializations in cities they work in (direct or same cluster),
- * newest first.
+ * Feed for a specific master: published tasks the master has been INVITED to
+ * by the wave dispatcher, newest first.
+ *
+ * A task exposes `matchedMasterIds` (priority snapshot) and `invitedCount`
+ * (how many waves have opened). The master sees the task only if their id is
+ * within the invited slice. Legacy/unmatched tasks (empty snapshot) fall back
+ * to the previous cluster-based visibility so nothing silently disappears.
  */
 export function feedForMaster(
-  master: Pick<MasterProfile, 'specializations' | 'workCities'>,
+  master: Pick<MasterProfile, 'id' | 'specializations' | 'workCities'>,
   publishedTasks: Task[]
 ): Task[] {
-  // map work cities → their clusters → all cities of those clusters
+  // map work cities → their clusters → all cities of those clusters (fallback only)
   const clusterIds = new Set(
     master.workCities
       .map((cityId) => getClusterOfCity(cityId))
@@ -92,10 +96,17 @@ export function feedForMaster(
   );
 
   return publishedTasks
-    .filter(
-      (t) =>
+    .filter((t) => {
+      const snapshot = t.matchedMasterIds ?? [];
+      if (snapshot.length > 0) {
+        // Wave-based visibility: only invited masters see the task
+        return snapshot.slice(0, t.invitedCount).includes(master.id);
+      }
+      // Fallback for legacy tasks without a wave snapshot
+      return (
         overlaps(master.specializations, t.categories) &&
         (visibleCities.has(t.cityId) || master.workCities.includes(t.cityId))
-    )
+      );
+    })
     .sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
 }

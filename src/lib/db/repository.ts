@@ -69,12 +69,31 @@ export interface DbRepository {
   }): Promise<MasterProfile[]>;
 
   // ── tasks ────────────────────────────────────────────────
-  createTask(input: Omit<Task, 'id' | 'createdAt' | 'selectedBidId' | 'publishedAt' | 'assignedAt' | 'completedAt'>): Promise<Task>;
+  createTask(
+    input: Omit<
+      Task,
+      | 'id'
+      | 'createdAt'
+      | 'selectedBidId'
+      | 'publishedAt'
+      | 'assignedAt'
+      | 'completedAt'
+      | 'matchedMasterIds'
+      | 'waveSize'
+      | 'invitedCount'
+      | 'waveLastAdvancedAt'
+    >
+  ): Promise<Task>;
   getTask(id: string): Promise<Task | null>;
   listTasksByClient(clientId: string): Promise<Task[]>;
   listPublishedTasks(filter?: { cityIds?: string[]; categories?: string[] }): Promise<Task[]>;
   updateTaskStatus(id: string, status: TaskStatus): Promise<Task | null>;
   setTaskSelectedBid(taskId: string, bidId: string): Promise<Task | null>;
+  /** Wave dispatch: update the invitation snapshot / progress for a task */
+  updateTaskWave(
+    id: string,
+    patch: Partial<Pick<Task, 'matchedMasterIds' | 'waveSize' | 'invitedCount' | 'waveLastAdvancedAt'>>
+  ): Promise<Task | null>;
 
   // ── bids ─────────────────────────────────────────────────
   createBid(input: Omit<Bid, 'id' | 'createdAt' | 'status'>): Promise<Bid>;

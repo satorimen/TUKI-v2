@@ -57,7 +57,15 @@
     "sqm": "{area} sqm",
     "needCityBudget": "At least a city and a budget are needed to publish",
     "loginToPublish": "To publish — a quick email sign-in:",
-    "mockBadge": "Demo mode (no external AI)"
+    "mockBadge": "Demo mode (no external AI)",
+    "assistantHello": "Hi! Describe in your own words what needs doing — I'll ask a couple of questions and build a request for pros.",
+    "send": "Send",
+    "gotIt": "Got it!",
+    "offlineNote": "Couldn't reach the AI — you can continue and fill in the details manually.",
+    "reviewAndPublish": "Review & publish →",
+    "continueToDetails": "Continue to details →",
+    "backToChat": "Back to chat",
+    "publishSuccessHint": "We send your request to pros in waves — nearest first. Replies show up in My requests."
   },
   "city": {
     "label": "City",

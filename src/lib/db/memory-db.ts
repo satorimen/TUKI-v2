@@ -175,12 +175,26 @@ export class MemoryDb implements DbRepository {
       ...input,
       id: randomUUID(),
       selectedBidId: null,
+      matchedMasterIds: [],
+      waveSize: 5,
+      invitedCount: 0,
+      waveLastAdvancedAt: null,
       publishedAt: now,
       assignedAt: null,
       completedAt: null,
       createdAt: now,
     };
     state().tasks.set(task.id, task);
+    return task;
+  }
+
+  async updateTaskWave(
+    id: string,
+    patch: Partial<Pick<Task, 'matchedMasterIds' | 'waveSize' | 'invitedCount' | 'waveLastAdvancedAt'>>
+  ) {
+    const task = state().tasks.get(id);
+    if (!task) return null;
+    Object.assign(task, patch);
     return task;
   }
 

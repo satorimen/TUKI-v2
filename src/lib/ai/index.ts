@@ -7,15 +7,15 @@ export type ProviderKind = 'gemini' | 'mock';
 
 /**
  * Provider factory.
- * - GEMINI_API_KEY set → Gemini (with built-in Mock fallback on errors)
- * - otherwise → Mock (deterministic rule-based parsing, fine for dev/demo)
+ * - AI disabled explicitly (AI_DISABLED=1) → Mock (deterministic, offline)
+ * - otherwise → Gemini via the Vercel AI Gateway (zero-config auth on v0/Vercel),
+ *   with a built-in Mock fallback on any error so the chat never breaks.
  */
 export function getAIProvider(): { provider: AIProvider; kind: ProviderKind } {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (apiKey) {
-    return { provider: new GeminiProvider(apiKey), kind: 'gemini' };
+  if (process.env.AI_DISABLED === '1') {
+    return { provider: new MockProvider(), kind: 'mock' };
   }
-  return { provider: new MockProvider(), kind: 'mock' };
+  return { provider: new GeminiProvider(), kind: 'gemini' };
 }
 
 /**

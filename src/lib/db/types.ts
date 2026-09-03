@@ -79,6 +79,14 @@ export interface Task {
   rawInput: string | null;
   photoUrls: string[];
   selectedBidId: string | null;
+  /** Wave dispatch — snapshot of matched master ids (priority order) taken at publish */
+  matchedMasterIds: string[];
+  /** How many masters are invited per wave */
+  waveSize: number;
+  /** How many masters (from the front of matchedMasterIds) have been invited so far */
+  invitedCount: number;
+  /** When the last wave was opened (ISO) — drives lazy time-based advancement */
+  waveLastAdvancedAt: string | null;
   publishedAt: string | null;
   assignedAt: string | null;
   completedAt: string | null;
