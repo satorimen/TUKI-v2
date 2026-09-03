@@ -17,11 +17,12 @@ interface Props {
     experienceYears?: number | null;
     bio?: string | null;
   };
+  onSaved?: () => void;
 }
 
 const ALL_CITY_IDS = CITIES.map((c) => c.id);
 
-export default function MasterOnboarding({ initial }: Props) {
+export default function MasterOnboarding({ initial, onSaved }: Props) {
   const t = useTranslations('master');
   const tc = useTranslations('common');
   const locale = useLocale() as Language;
@@ -47,7 +48,7 @@ export default function MasterOnboarding({ initial }: Props) {
 
   const citiesByCluster = useMemo(() => {
     const map = new Map<ClusterId, typeof CITIES>();
-    for (const cluster of CLUSTERS) map.set(cluster.id, []);
+    for (const cluster of Object.values(CLUSTERS)) map.set(cluster.id, []);
     for (const city of CITIES) map.get(city.cluster)?.push(city);
     return map;
   }, []);
@@ -137,7 +138,11 @@ export default function MasterOnboarding({ initial }: Props) {
       });
       if (!res.ok) throw new Error('save failed');
       setSaved(true);
-      setTimeout(() => router.push('/master/feed'), 900);
+      if (onSaved) {
+        setTimeout(onSaved, 900);
+      } else {
+        setTimeout(() => router.push('/master/feed'), 900);
+      }
     } catch {
       setError(tc('error'));
     } finally {
@@ -270,7 +275,7 @@ export default function MasterOnboarding({ initial }: Props) {
         ) : (
           /* Collapsible region groups */
           <div className="flex flex-col gap-2">
-            {CLUSTERS.map((cluster) => {
+            {Object.values(CLUSTERS).map((cluster) => {
               const list = citiesByCluster.get(cluster.id) ?? [];
               const state = clusterState(cluster.id);
               const open = openClusters.has(cluster.id);

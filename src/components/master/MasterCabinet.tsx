@@ -63,9 +63,15 @@ export default function MasterCabinet() {
   if (edit && data) {
     return (
       <MasterOnboarding
-        profile={data.profile}
-        master={data.master}
         key={data.master.id}
+        initial={{
+          fullName: data.profile.fullName ?? "",
+          whatsappNumber: data.profile.whatsappNumber ?? data.profile.phone ?? "",
+          specializations: data.master.specializations ?? [],
+          workCities: data.master.workCities ?? [],
+          experienceYears: data.master.experienceYears ?? null,
+          bio: data.master.bio ?? "",
+        }}
         onSaved={() => {
           setEdit(false);
           load();
